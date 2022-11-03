@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collector;
@@ -18,12 +19,10 @@ public class DatabaseAndSpringBootAplicationController {
 
     @GetMapping("/data")
     public String test() {
-        List<Area> areas = areaRepository.findAll();
-        areas.forEach(System.out::println);
 
-        Area someArea = getArea();
+        List<Area> someAreas = getAreas();
 
-        areaRepository.save(someArea);
+        areaRepository.saveAll(someAreas);
 
         List<Area> areas1 = areaRepository.findAll();
         return areas1.stream()
@@ -31,8 +30,15 @@ public class DatabaseAndSpringBootAplicationController {
                 .collect(Collectors.joining(", "));
     }
 
-    private Area getArea() {
-        return new Area("Area");
+    private List<Area> getAreas() {
+        return new ArrayList<>(
+                List.of(
+                        new Area("Area1"),
+                        new Area("Area2"),
+                        new Area("Area3"),
+                        new Area("Area4")
+                )
+        );
     }
 
 

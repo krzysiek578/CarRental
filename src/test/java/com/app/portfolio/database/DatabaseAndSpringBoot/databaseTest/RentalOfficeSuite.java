@@ -3,6 +3,7 @@ package com.app.portfolio.database.DatabaseAndSpringBoot.databaseTest;
 import com.app.portfolio.database.DatabaseAndSpringBoot.RentalOffice;
 import com.app.portfolio.database.DatabaseAndSpringBoot.RentalOfficeRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +23,9 @@ public class RentalOfficeSuite {
         //Given
         RentalOffice rentalOffice = new RentalOffice("Office in Warsaw", "Warsaw", "Ul.Trakt Brzeski", "12-345");
         //When
-
+        rentalOfficeRepository.save(rentalOffice);
         //Then
+        Assertions.assertTrue(rentalOfficeRepository.existsById(rentalOffice.getId()));
+        Assertions.assertEquals(rentalOffice, rentalOfficeRepository.findById(rentalOffice.getId()));
     }
 }

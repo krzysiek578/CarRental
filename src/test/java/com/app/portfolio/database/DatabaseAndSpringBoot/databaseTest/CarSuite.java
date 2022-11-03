@@ -24,7 +24,6 @@ public class CarSuite {
     @AfterEach
     public void reset() {
         carRepository.deleteAll();
-
     }
 
     @Test

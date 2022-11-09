@@ -14,18 +14,22 @@ import java.util.stream.Collectors;
 @RestController
 public class DatabaseAndSpringBootAplicationController {
 
-    @Autowired
-    AreaRepository areaRepository;
+
+    private final AreaRepository areaRepository;
+
+    public DatabaseAndSpringBootAplicationController(AreaRepository areaRepository) {
+        this.areaRepository = areaRepository;
+    }
 
     @GetMapping("/data")
     public String test() {
 
-        List<Area> someAreas = getAreas();
+        final List<Area> areaDao = getAreas();
 
-        areaRepository.saveAll(someAreas);
+        areaRepository.saveAll(areaDao);
 
-        List<Area> areas1 = areaRepository.findAll();
-        return areas1.stream()
+        final List<Area> areaFromDatabase = areaRepository.findAll();
+        return areaFromDatabase.stream()
                 .map(Area::toString)
                 .collect(Collectors.joining(", "));
     }
@@ -33,10 +37,15 @@ public class DatabaseAndSpringBootAplicationController {
     private List<Area> getAreas() {
         return new ArrayList<>(
                 List.of(
-                        new Area("Area1"),
-                        new Area("Area2"),
-                        new Area("Area3"),
-                        new Area("Area4")
+                        Area.builder()
+                                .name("Area1")
+                                .build(),
+                        Area.builder()
+                                .name("Area2")
+                                .build(),
+                        Area.builder()
+                                .name("Area3")
+                                .build()
                 )
         );
     }

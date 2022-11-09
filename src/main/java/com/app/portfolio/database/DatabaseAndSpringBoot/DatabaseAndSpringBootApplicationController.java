@@ -1,27 +1,24 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RestController
-public class DatabaseAndSpringBootAplicationController {
+@RequiredArgsConstructor
+public class DatabaseAndSpringBootApplicationController {
 
 
     private final AreaRepository areaRepository;
 
-    public DatabaseAndSpringBootAplicationController(AreaRepository areaRepository) {
-        this.areaRepository = areaRepository;
-    }
 
-    @GetMapping("/data")
+    @GetMapping("/areas")
     public String test() {
 
         final List<Area> areaDao = getAreas();

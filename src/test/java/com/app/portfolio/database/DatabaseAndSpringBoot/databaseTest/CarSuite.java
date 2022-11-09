@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +21,8 @@ import java.util.Optional;
 public class CarSuite {
 
 
-    private final CarRepository carRepository;
-
-
     @Autowired
-    public CarSuite(CarRepository carRepository) {
-        this.carRepository = carRepository;
-    }
+    private CarRepository carRepository;
 
     @AfterEach
     public void reset() {
@@ -39,10 +35,15 @@ public class CarSuite {
         final Car car = new Car("Audi", "S3", PetrolType.GASOLINE, true);
         //When
         carRepository.save(car);
-        final Optional<Car> resultCar = carRepository.findById(car.getId());
+        final Optional<Car> resultCarOptional = carRepository.findById(car.getId());
         //Then
-        Assertions.assertTrue(resultCar.isPresent());
-        Assertions.assertEquals(car, resultCar.get());
+        Assertions.assertTrue(resultCarOptional.isPresent());
+        final Car resultCar = resultCarOptional.get();
+        Assertions.assertEquals(car, resultCar);
+        Assertions.assertEquals("Audi", resultCar.getBrand());
+        Assertions.assertEquals("S3", resultCar.getModel());
+        Assertions.assertEquals(PetrolType.GASOLINE, resultCar.getPetrolType());
+        Assertions.assertTrue(resultCar.isEnabled());
     }
 
     @Test
@@ -62,6 +63,7 @@ public class CarSuite {
         Assertions.assertNotNull(resultCar);
         Assertions.assertEquals(resultCar.size(), size);
         Assertions.assertIterableEquals(carList, resultCar);
+        Assertions.assertEquals("M3", resultCar.get(3).getModel());
     }
 
     @Test
@@ -84,16 +86,18 @@ public class CarSuite {
         //Given
         final Car firstTestCar = new Car("Audi", "S3", PetrolType.ELECTRIC, true);
         final Car secondTestCar = new Car("BMW", "M3", PetrolType.GASOLINE, true);
-        final Car thirdTestCar = new Car("Volskwagen", "T3", PetrolType.DIESEL, true);
+        final Car thirdTestCar = new Car("Volkswagen", "T3", PetrolType.DIESEL, true);
 
         //Or add all list with saveAll()
         carRepository.save(firstTestCar);
         carRepository.save(secondTestCar);
         carRepository.save(thirdTestCar);
         //When
+        List<Car> carsSavedInBase = carRepository.findAll();
         carRepository.deleteAll();
         final List<Car> resultListCar = carRepository.findAll();
         //Then
+        Assertions.assertEquals(3, carsSavedInBase.size());
         Assertions.assertEquals(0, resultListCar.size());
     }
 
@@ -110,10 +114,10 @@ public class CarSuite {
         Assertions.assertTrue(resultCarOptional.isPresent());
         final Car resultCar = resultCarOptional.get();
         Assertions.assertEquals(car, resultCar);
-        Assertions.assertEquals(car.getBrand(), resultCar.getBrand());
-        Assertions.assertEquals(car.getModel(), resultCar.getModel());
-        Assertions.assertEquals(car.getId(), resultCar.getId());
-        Assertions.assertEquals(car.getPetrolType(), resultCar.getPetrolType());
+        Assertions.assertEquals("Audi", resultCar.getBrand());
+        Assertions.assertEquals("S3", resultCar.getModel());
+        Assertions.assertEquals(10, resultCar.getId());
+        Assertions.assertEquals(PetrolType.ELECTRIC, resultCar.getPetrolType());
     }
 
     @Test
@@ -142,6 +146,7 @@ public class CarSuite {
     }
 
     @Test
+    @Transactional
     public void changeVariableTakeFromDatabase() {
         //Given
         final Car car = new Car("Audi", "S3", PetrolType.ELECTRIC, true);

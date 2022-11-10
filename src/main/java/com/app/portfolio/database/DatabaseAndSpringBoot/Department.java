@@ -18,8 +18,19 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private RentalOffice rentalOffice;
 
     public Department(String name) {
         this.name = name;
     }
+
+    public void addRentalOffice(RentalOffice rentalOffice) {
+        this.rentalOffice = rentalOffice;
+    }
+
+    public void deleteRentalOffice() {
+        this.rentalOffice = null;
+    }
+
 }

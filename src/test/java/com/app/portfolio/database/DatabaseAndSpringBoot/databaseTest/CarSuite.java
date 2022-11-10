@@ -4,6 +4,7 @@ package com.app.portfolio.database.DatabaseAndSpringBoot.databaseTest;
 import com.app.portfolio.database.DatabaseAndSpringBoot.Car;
 import com.app.portfolio.database.DatabaseAndSpringBoot.CarRepository;
 import com.app.portfolio.database.DatabaseAndSpringBoot.PetrolType;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,12 @@ public class CarSuite {
 
     @Autowired
     private CarRepository carRepository;
+
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @AfterEach
     public void reset() {
@@ -161,5 +169,12 @@ public class CarSuite {
         Assertions.assertEquals("Volvo", resultCarAfterChange.getBrand());
     }
 
+
+    @Test
+    public void oneToManyTest() {
+        //Given
+        //When
+        //Then
+    }
 
 }

@@ -20,8 +20,11 @@ public class Car {
     private String brand;
     private String model;
     @Enumerated(EnumType.STRING)
-    private PetrolType  petrolType;
+    private PetrolType petrolType;
     private boolean enabled;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private RentalOffice rentalOffice;
 
     public Car(String brand, String model, PetrolType petrolType, boolean enabled) {
         this.brand = brand;
@@ -30,10 +33,21 @@ public class Car {
         this.enabled = enabled;
     }
 
+    public void addRentalOffice(RentalOffice rentalOffice) {
+        if (this.rentalOffice == null)
+            this.rentalOffice = rentalOffice;
+    }
+
+    public void removeRentalOffice() {
+        this.rentalOffice = null;
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
         return enabled == car.enabled && Objects.equals(id, car.id) && Objects.equals(brand, car.brand) && Objects.equals(model, car.model) && petrolType == car.petrolType;
     }
@@ -41,5 +55,16 @@ public class Car {
     @Override
     public int hashCode() {
         return Objects.hash(id, brand, model, petrolType, enabled);
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", petrolType=" + petrolType +
+                ", enabled=" + enabled +
+                '}';
     }
 }

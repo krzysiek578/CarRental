@@ -3,7 +3,9 @@ package com.app.portfolio.database.DatabaseAndSpringBoot.databaseTest;
 
 import com.app.portfolio.database.DatabaseAndSpringBoot.Car;
 import com.app.portfolio.database.DatabaseAndSpringBoot.CarRepository;
+import com.app.portfolio.database.DatabaseAndSpringBoot.DepartmentRepository;
 import com.app.portfolio.database.DatabaseAndSpringBoot.PetrolType;
+import com.app.portfolio.database.DatabaseAndSpringBoot.Department;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -13,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @SpringBootTest
@@ -30,7 +32,7 @@ public class CarSuite {
     private SessionFactory sessionFactory;
 
     @Autowired
-    private EntityManager entityManager;
+    private DepartmentRepository departmentRepository;
 
     @AfterEach
     public void reset() {
@@ -110,7 +112,6 @@ public class CarSuite {
     }
 
 
-
     @Test
     public void findByIdTest() {
         //Given
@@ -124,7 +125,7 @@ public class CarSuite {
         Assertions.assertEquals(car, resultCar);
         Assertions.assertEquals("Audi", resultCar.getBrand());
         Assertions.assertEquals("S3", resultCar.getModel());
-        Assertions.assertEquals(10, resultCar.getId());
+//        Assertions.assertEquals(10, resultCar.getId());
         Assertions.assertEquals(PetrolType.ELECTRIC, resultCar.getPetrolType());
     }
 
@@ -171,10 +172,62 @@ public class CarSuite {
 
 
     @Test
-    public void oneToManyTest() {
+    @Transactional
+    public void departmentsAddToOneCarTest() {
         //Given
+        Car car = new Car("Mercedes", "C63", PetrolType.ELECTRIC, false);
+        carRepository.save(car);
+
+        Department department = new Department("Test");
+        Department secondDepartment = new Department("TestSecond");
+        departmentRepository.save(department);
+        departmentRepository.save(secondDepartment);
+
+        car.addDepartment(department);
+        car.addDepartment(secondDepartment);
+
         //When
+        List<Department> departmentList = departmentRepository.findAll();
+
         //Then
+        Assertions.assertEquals(2, departmentList.size());
+        Assertions.assertEquals("TestSecond", departmentList.get(1).getName());
+    }
+
+    @Test
+    @Transactional
+    public void deleteDepartmentsFromCarTest() {
+        //Given
+        Car car = new Car("Mercedes", "C63", PetrolType.ELECTRIC, false);
+        carRepository.save(car);
+
+        Department department = new Department("Test");
+        Department secondDepartment = new Department("TestSecond");
+        departmentRepository.save(department);
+        departmentRepository.save(secondDepartment);
+
+        car.addDepartment(department);
+        car.addDepartment(secondDepartment);
+
+        //When
+        final List<Department> departmentList = departmentRepository.findAll();
+        Assertions.assertEquals(2, departmentList.size());
+
+        final List<Car> carList = carRepository.findAll();
+        final Car departmentsFromCarBeforeDelete = carRepository.findById(car.getId()).get();
+        Assertions.assertEquals("Mercedes",departmentsFromCarBeforeDelete.getBrand());
+
+
+        car.removeDepartment(department);
+        car.removeDepartment(secondDepartment);
+        final List<Department> departmentsAfterRemoveFromCar = departmentRepository.findAll();
+        final Set<Department> departmentsFromCar = car.getDepartmentsSet();
+        //Then
+        Assertions.assertEquals(2, departmentList.size());
+
+        Assertions.assertEquals("TestSecond", departmentList.get(1).getName());
+        Assertions.assertEquals(2, departmentsAfterRemoveFromCar.size());
+        Assertions.assertEquals(0, departmentsFromCar.size());
     }
 
 }

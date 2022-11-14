@@ -7,9 +7,19 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Column;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.GenerationType;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "rentalOffices")
@@ -29,10 +39,10 @@ public class RentalOffice {
     private String postalCode;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "rentalOffice", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    private List<Car> cars;
+    private Set<Car> cars = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "rentalOffice", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    private List<Department> departments;
+    private Set<Department> departments = new HashSet<>();
 
     public String getName() {
         return name;
@@ -51,35 +61,23 @@ public class RentalOffice {
     }
 
     public void addCar(Car car) {
-        if(cars == null) {
-            this.cars = new ArrayList<>();
-            this.cars.add(car);
-            return;
-        }
         this.cars.add(car);
+        car.addRentalOffice(this);
     }
 
-    public boolean deleteCar(Car car) {
-        if(cars != null) {
-            return this.cars.remove(car);
-        }
-        return false;
+    public void deleteCar(Car car) {
+        this.cars.remove(car);
+        car.removeRentalOffice();
     }
 
     public void addDepartment(Department department) {
-        if(this.departments == null) {
-            this.departments = new ArrayList<>();
-            this.departments.add(department);
-            return;
-        }
         this.departments.add(department);
+        department.addRentalOffice(this);
     }
 
-    public boolean deleteDepartment(Department department) {
-        if(department != null) {
-            return this.departments.remove(department);
-        }
-        return false;
+    public void deleteDepartment(Department department) {
+         this.departments.remove(department);
+         department.deleteRentalOffice();
     }
 
     public RentalOffice(String name, String city, String street, String postalCode) {

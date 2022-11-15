@@ -161,7 +161,6 @@ public class RentalOfficeSuite {
         rentalOfficeRepository.deleteAll();
         final List<Department> departmentRepositoryAll = departmentRepository.findAll();
 
-
         //Then
         Assertions.assertEquals(0, departmentRepositoryAll.size());
         Assertions.assertEquals(0, rentalOfficeRepository.findAll().size());
@@ -185,7 +184,6 @@ public class RentalOfficeSuite {
         Assertions.assertEquals(2, rentalOffice.getDepartments().size());
         Assertions.assertEquals(rentalOffice, departmentRepository.findById(secondDepartment.getId()).get().getRentalOffice());
         Assertions.assertEquals("12-345", departmentRepository.findById(secondDepartment.getId()).get().getRentalOffice().getPostalCode());
-
 
         List<Department> departmentRepositoryAllBeforeDeleteDepartment = departmentRepository.findAll();
         Assertions.assertEquals(2, departmentRepositoryAllBeforeDeleteDepartment.size());

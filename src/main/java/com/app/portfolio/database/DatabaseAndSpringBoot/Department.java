@@ -44,7 +44,7 @@ public class Department {
         this.name = name;
     }
 
-    public void addRentalOffice(RentalOffice rentalOffice) {
+    public void setRentalOffice(RentalOffice rentalOffice) {
         this.rentalOffice = rentalOffice;
     }
 

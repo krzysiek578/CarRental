@@ -107,14 +107,14 @@ public class DepartmentSuite {
 
         areaRepository.save(area);
         Assertions.assertEquals(area, areaRepository.findById(area.getId()).get());
-        Assertions.assertEquals(area.getName(), areaRepository.findById(area.getId()).get().getName());
+        Assertions.assertEquals("TestArea", areaRepository.findById(area.getId()).get().getName());
         Optional<Area> areaBeforeAction = areaRepository.findById(area.getId());
         Assertions.assertTrue(areaBeforeAction.isPresent());
         Assertions.assertEquals(0, areaBeforeAction.get().getDepartments().size());
 
         departmentRepository.save(department);
         Assertions.assertEquals(department, departmentRepository.findById(department.getId()).get());
-        Assertions.assertEquals(department.getName(), departmentRepository.findById(department.getId()).get().getName());
+        Assertions.assertEquals("TestDepartment", departmentRepository.findById(department.getId()).get().getName());
         Assertions.assertNull(departmentRepository.findById(department.getId()).get().getArea());
 
         //When
@@ -135,7 +135,7 @@ public class DepartmentSuite {
 
         areaRepository.save(area);
         Assertions.assertEquals(area, areaRepository.findById(area.getId()).get());
-        Assertions.assertEquals(area.getName(), areaRepository.findById(area.getId()).get().getName());
+        Assertions.assertEquals("TestArea", areaRepository.findById(area.getId()).get().getName());
         Optional<Area> areaBeforeAction = areaRepository.findById(area.getId());
         Assertions.assertTrue(areaBeforeAction.isPresent());
         Assertions.assertEquals(0, areaBeforeAction.get().getDepartments().size());
@@ -143,7 +143,7 @@ public class DepartmentSuite {
         departmentRepository.save(department);
         departmentRepository.save(secondDepartment);
         Assertions.assertEquals(department, departmentRepository.findById(department.getId()).get());
-        Assertions.assertEquals(secondDepartment.getName(), departmentRepository.findById(secondDepartment.getId()).get().getName());
+        Assertions.assertEquals("TestDepartmentSecond", departmentRepository.findById(secondDepartment.getId()).get().getName());
         Assertions.assertNull(departmentRepository.findById(department.getId()).get().getArea());
 
         //When
@@ -169,7 +169,7 @@ public class DepartmentSuite {
 
         areaRepository.save(area);
         Assertions.assertEquals(area, areaRepository.findById(area.getId()).get());
-        Assertions.assertEquals(area.getName(), areaRepository.findById(area.getId()).get().getName());
+        Assertions.assertEquals("TestArea", areaRepository.findById(area.getId()).get().getName());
         Optional<Area> areaBeforeAction = areaRepository.findById(area.getId());
         Assertions.assertTrue(areaBeforeAction.isPresent());
         Assertions.assertEquals(0, areaBeforeAction.get().getDepartments().size());
@@ -177,7 +177,7 @@ public class DepartmentSuite {
         departmentRepository.save(department);
         departmentRepository.save(secondDepartment);
         Assertions.assertEquals(department, departmentRepository.findById(department.getId()).get());
-        Assertions.assertEquals(secondDepartment.getName(), departmentRepository.findById(secondDepartment.getId()).get().getName());
+        Assertions.assertEquals("TestDepartmentSecond", departmentRepository.findById(secondDepartment.getId()).get().getName());
         Assertions.assertNull(departmentRepository.findById(department.getId()).get().getArea());
 
         //When

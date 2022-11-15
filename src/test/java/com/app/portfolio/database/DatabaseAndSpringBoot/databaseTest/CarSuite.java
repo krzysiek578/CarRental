@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,9 @@ public class CarSuite {
     @Autowired
     private DepartmentRepository departmentRepository;
 
+    @Autowired
+    EntityManager entityManager;
+
     @AfterEach
     public void reset() {
         carRepository.deleteAll();
@@ -45,7 +49,7 @@ public class CarSuite {
         final Car car = new Car("Audi", "S3", PetrolType.GASOLINE, true);
         //When
         carRepository.save(car);
-        final Optional<Car> resultCarOptional = carRepository.findById(car.getId());
+        final Optional<Car> resultCarOptional = carRepository.findById(1L);
         //Then
         Assertions.assertTrue(resultCarOptional.isPresent());
         final Car resultCar = resultCarOptional.get();
@@ -118,7 +122,7 @@ public class CarSuite {
         final Car car = new Car("Audi", "S3", PetrolType.ELECTRIC, true);
         carRepository.save(car);
         //When
-        final Optional<Car> resultCarOptional = carRepository.findById(car.getId());
+        final Optional<Car> resultCarOptional = carRepository.findById(1L);
         //Then
         Assertions.assertTrue(resultCarOptional.isPresent());
         final Car resultCar = resultCarOptional.get();
@@ -161,8 +165,8 @@ public class CarSuite {
         final Car car = new Car("Audi", "S3", PetrolType.ELECTRIC, true);
         carRepository.save(car);
         //When
-        carRepository.findById(car.getId()).get().setBrand("Volvo");
-        final Optional<Car> resultCarOptionalAfterChange = carRepository.findById(car.getId());
+        carRepository.findById(1L).get().setBrand("Volvo");
+        final Optional<Car> resultCarOptionalAfterChange = carRepository.findById(1L);
 
         //Then
         Assertions.assertTrue(resultCarOptionalAfterChange.isPresent());
@@ -192,6 +196,7 @@ public class CarSuite {
         //Then
         Assertions.assertEquals(2, departmentList.size());
         Assertions.assertEquals("TestSecond", departmentList.get(1).getName());
+        Assertions.assertEquals(2, carRepository.findById(1L).get().getDepartmentsSet().size());
     }
 
     @Test
@@ -200,6 +205,7 @@ public class CarSuite {
         //Given
         Car car = new Car("Mercedes", "C63", PetrolType.ELECTRIC, false);
         carRepository.save(car);
+        final Car departmentsFromCarBeforeDelete = carRepository.findById(1L).get();
 
         Department department = new Department("Test");
         Department secondDepartment = new Department("TestSecond");
@@ -214,7 +220,7 @@ public class CarSuite {
         Assertions.assertEquals(2, departmentList.size());
 
         final List<Car> carList = carRepository.findAll();
-        final Car departmentsFromCarBeforeDelete = carRepository.findById(car.getId()).get();
+
         Assertions.assertEquals("Mercedes",departmentsFromCarBeforeDelete.getBrand());
 
 
@@ -228,6 +234,7 @@ public class CarSuite {
         Assertions.assertEquals("TestSecond", departmentList.get(1).getName());
         Assertions.assertEquals(2, departmentsAfterRemoveFromCar.size());
         Assertions.assertEquals(0, departmentsFromCar.size());
+        Assertions.assertEquals(1, carList.size());
     }
 
 }

@@ -14,7 +14,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -45,7 +44,6 @@ public class Car {
     private Set<Department> departmentsSet = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
     private RentalOffice rentalOffice;
 
     public Car(String brand, String model, PetrolType petrolType, boolean enabled) {
@@ -55,7 +53,7 @@ public class Car {
         this.enabled = enabled;
     }
 
-    public void addRentalOffice(RentalOffice rentalOffice) {
+    public void setRentalOffice(RentalOffice rentalOffice) {
         this.rentalOffice = rentalOffice;
     }
 

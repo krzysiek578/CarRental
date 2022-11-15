@@ -62,7 +62,7 @@ public class RentalOffice {
 
     public void addCar(Car car) {
         this.cars.add(car);
-        car.addRentalOffice(this);
+        car.setRentalOffice(this);
     }
 
     public void deleteCar(Car car) {
@@ -72,7 +72,7 @@ public class RentalOffice {
 
     public void addDepartment(Department department) {
         this.departments.add(department);
-        department.addRentalOffice(this);
+        department.setRentalOffice(this);
     }
 
     public void deleteDepartment(Department department) {

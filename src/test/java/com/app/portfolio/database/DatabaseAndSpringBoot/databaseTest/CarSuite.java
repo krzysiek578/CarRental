@@ -9,10 +9,14 @@ import com.app.portfolio.database.DatabaseAndSpringBoot.Department;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -35,15 +39,20 @@ public class CarSuite {
     @Autowired
     private DepartmentRepository departmentRepository;
 
-    @Autowired
-    EntityManager entityManager;
 
     @AfterEach
-    public void reset() {
+    public void clearDatabase() {
+        departmentRepository.deleteAll();
+        carRepository.deleteAll();
+    }
+    @BeforeEach
+    public void clearDatabaseBefore() {
+        departmentRepository.deleteAll();
         carRepository.deleteAll();
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void saveCarTest() {
         //Given
         final Car car = new Car("Audi", "S3", PetrolType.GASOLINE, true);
@@ -61,6 +70,7 @@ public class CarSuite {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void testSaveAll() {
         //Given
         final List<Car> carList = List.of(
@@ -81,6 +91,7 @@ public class CarSuite {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteCarTest() {
         //Given
         final Car testCar = new Car("Audi", "S3", PetrolType.GASOLINE, true);
@@ -96,6 +107,7 @@ public class CarSuite {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteAllTest() {
         //Given
         final Car firstTestCar = new Car("Audi", "S3", PetrolType.ELECTRIC, true);
@@ -117,6 +129,7 @@ public class CarSuite {
 
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void findByIdTest() {
         //Given
         final Car car = new Car("Audi", "S3", PetrolType.ELECTRIC, true);
@@ -134,6 +147,7 @@ public class CarSuite {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void findAllTest() {
         //Given
         final Car firstTestCar = new Car("Audi", "S3", PetrolType.ELECTRIC, true);
@@ -160,6 +174,7 @@ public class CarSuite {
 
     @Test
     @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void changeVariableTakeFromDatabase() {
         //Given
         final Car car = new Car("Audi", "S3", PetrolType.ELECTRIC, true);
@@ -177,6 +192,7 @@ public class CarSuite {
 
     @Test
     @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void departmentsAddToOneCarTest() {
         //Given
         Car car = new Car("Mercedes", "C63", PetrolType.ELECTRIC, false);
@@ -201,6 +217,7 @@ public class CarSuite {
 
     @Test
     @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteDepartmentsFromCarTest() {
         //Given
         Car car = new Car("Mercedes", "C63", PetrolType.ELECTRIC, false);

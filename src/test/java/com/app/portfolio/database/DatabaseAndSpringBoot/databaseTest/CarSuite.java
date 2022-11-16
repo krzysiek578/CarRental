@@ -1,11 +1,11 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot.databaseTest;
 
 
-import com.app.portfolio.database.DatabaseAndSpringBoot.Car;
-import com.app.portfolio.database.DatabaseAndSpringBoot.CarRepository;
-import com.app.portfolio.database.DatabaseAndSpringBoot.DepartmentRepository;
+import com.app.portfolio.database.DatabaseAndSpringBoot.car.Car;
+import com.app.portfolio.database.DatabaseAndSpringBoot.car.CarRepository;
+import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.DepartmentRepository;
 import com.app.portfolio.database.DatabaseAndSpringBoot.PetrolType;
-import com.app.portfolio.database.DatabaseAndSpringBoot.Department;
+import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.Department;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -13,14 +13,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,8 +31,6 @@ public class CarSuite {
     @Autowired
     private CarRepository carRepository;
 
-    @Autowired
-    private SessionFactory sessionFactory;
 
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -142,7 +138,6 @@ public class CarSuite {
         Assertions.assertEquals(car, resultCar);
         Assertions.assertEquals("Audi", resultCar.getBrand());
         Assertions.assertEquals("S3", resultCar.getModel());
-//        Assertions.assertEquals(10, resultCar.getId());
         Assertions.assertEquals(PetrolType.ELECTRIC, resultCar.getPetrolType());
     }
 
@@ -203,16 +198,17 @@ public class CarSuite {
         departmentRepository.save(department);
         departmentRepository.save(secondDepartment);
 
-        car.addDepartment(department);
-        car.addDepartment(secondDepartment);
+        Set<Department> departmentList = new HashSet<>(Set.of(department, secondDepartment));
+        car.setDepartments(departmentList);
+
 
         //When
-        List<Department> departmentList = departmentRepository.findAll();
+        List<Department> departmentListFromDatabase = departmentRepository.findAll();
 
         //Then
         Assertions.assertEquals(2, departmentList.size());
-        Assertions.assertEquals("TestSecond", departmentList.get(1).getName());
-        Assertions.assertEquals(2, carRepository.findById(1L).get().getDepartmentsSet().size());
+        Assertions.assertEquals("TestSecond", departmentListFromDatabase.get(1).getName());
+        Assertions.assertEquals(2, carRepository.findById(1L).get().getDepartments().size());
     }
 
     @Test
@@ -222,33 +218,37 @@ public class CarSuite {
         //Given
         Car car = new Car("Mercedes", "C63", PetrolType.ELECTRIC, false);
         carRepository.save(car);
-        final Car departmentsFromCarBeforeDelete = carRepository.findById(1L).get();
+        final Car carBeforeAddDepartments = carRepository.findById(1L).get();
+        Assertions.assertEquals("Mercedes",carBeforeAddDepartments.getBrand());
 
         Department department = new Department("Test");
         Department secondDepartment = new Department("TestSecond");
         departmentRepository.save(department);
         departmentRepository.save(secondDepartment);
 
-        car.addDepartment(department);
-        car.addDepartment(secondDepartment);
+        Set<Department> departmentList = new HashSet<>(Set.of(department, secondDepartment));
+        car.setDepartments(departmentList);
+        Assertions.assertEquals(2, departmentList.size());
 
         //When
-        final List<Department> departmentList = departmentRepository.findAll();
-        Assertions.assertEquals(2, departmentList.size());
+        final List<Department> departmentListFromDatabase = departmentRepository.findAll();
+        Assertions.assertEquals(2, departmentListFromDatabase.size());
 
         final List<Car> carList = carRepository.findAll();
 
-        Assertions.assertEquals("Mercedes",departmentsFromCarBeforeDelete.getBrand());
 
 
-        car.removeDepartment(department);
-        car.removeDepartment(secondDepartment);
+
+        car.getDepartments().remove(department);
+        car.getDepartments().remove(secondDepartment);
         final List<Department> departmentsAfterRemoveFromCar = departmentRepository.findAll();
-        final Set<Department> departmentsFromCar = car.getDepartmentsSet();
+        final Set<Department> departmentsFromCar = car.getDepartments();
         //Then
-        Assertions.assertEquals(2, departmentList.size());
 
-        Assertions.assertEquals("TestSecond", departmentList.get(1).getName());
+
+        Assertions.assertEquals("TestSecond", departmentRepository.findById(2L).get().getName());
+        Assertions.assertFalse(department.getCars().contains(car));
+        Assertions.assertFalse(secondDepartment.getCars().contains(car));
         Assertions.assertEquals(2, departmentsAfterRemoveFromCar.size());
         Assertions.assertEquals(0, departmentsFromCar.size());
         Assertions.assertEquals(1, carList.size());

@@ -1,6 +1,7 @@
-package com.app.portfolio.database.DatabaseAndSpringBoot;
+package com.app.portfolio.database.DatabaseAndSpringBoot.area;
 
 
+import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.Department;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,5 +37,15 @@ public class Area {
 
     public Area(String name) {
         this.name = name;
+    }
+
+    public void addDepartment(Department department) {
+        this.departments.add(department);
+        department.setArea(this);
+    }
+
+    public void removeDepartment(Department department) {
+        this.departments.remove(department);
+        department.setArea(null);
     }
 }

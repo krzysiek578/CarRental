@@ -1,7 +1,8 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot;
 
 
-import lombok.AllArgsConstructor;
+import com.app.portfolio.database.DatabaseAndSpringBoot.area.Area;
+import com.app.portfolio.database.DatabaseAndSpringBoot.area.AreaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

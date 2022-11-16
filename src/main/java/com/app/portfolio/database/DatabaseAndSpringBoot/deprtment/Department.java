@@ -1,16 +1,26 @@
-package com.app.portfolio.database.DatabaseAndSpringBoot;
+package com.app.portfolio.database.DatabaseAndSpringBoot.deprtment;
 
+import com.app.portfolio.database.DatabaseAndSpringBoot.area.Area;
+import com.app.portfolio.database.DatabaseAndSpringBoot.car.Car;
+import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.RentalOffice;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.lang.Nullable;
 
-import javax.persistence.*;
-import java.io.FileInputStream;
-import java.util.ArrayList;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,7 +31,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Department {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,7 +44,7 @@ public class Department {
     //Właściciel relacji jointable
     //joincolumn do jednokierunkowej relacji chyba ze masz wymaganie nazwania klucza obcego
     //a mappedby do dwukierunkowych
-    private Set<Car> carSet = new HashSet<>();
+    private Set<Car> cars = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Area area;
@@ -44,31 +54,24 @@ public class Department {
         this.name = name;
     }
 
-    public void setRentalOffice(RentalOffice rentalOffice) {
-        this.rentalOffice = rentalOffice;
-    }
-
-    public void deleteRentalOffice() {
-        this.rentalOffice = null;
-    }
 
     public void addCar(Car car) {
-        this.carSet.add(car);
-        car.addDepartment(this);
+        cars.add(car);
+        car.getDepartments().add(this);
     }
 
     public void removeCar(Car car) {
-        this.carSet.remove(car);
-        car.getDepartmentsSet().remove(this);
+        cars.remove(car);
+        car.getDepartments().remove(this);
     }
 
     public void addArea(Area area) {
-        this.area = area;
+        this.setArea(area);
         area.getDepartments().add(this);
     }
 
-    public void removeArea() {
-        area.getDepartments().remove(this);
-        this.area = null;
+    public void removeArea(){
+        this.area.getDepartments().remove(this);
+        this.setArea(null);
     }
 }

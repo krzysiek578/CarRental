@@ -1,20 +1,21 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot.databaseTest;
 
-import com.app.portfolio.database.DatabaseAndSpringBoot.Area;
-import com.app.portfolio.database.DatabaseAndSpringBoot.AreaRepository;
-import com.app.portfolio.database.DatabaseAndSpringBoot.Car;
+import com.app.portfolio.database.DatabaseAndSpringBoot.area.Area;
+import com.app.portfolio.database.DatabaseAndSpringBoot.area.AreaRepository;
+import com.app.portfolio.database.DatabaseAndSpringBoot.car.Car;
 import com.app.portfolio.database.DatabaseAndSpringBoot.PetrolType;
-import com.app.portfolio.database.DatabaseAndSpringBoot.CarRepository;
-import com.app.portfolio.database.DatabaseAndSpringBoot.Department;
-import com.app.portfolio.database.DatabaseAndSpringBoot.DepartmentRepository;
+import com.app.portfolio.database.DatabaseAndSpringBoot.car.CarRepository;
+import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.Department;
+import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.DepartmentRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,16 +36,12 @@ public class DepartmentSuite {
         departmentRepository.deleteAll();
         carRepository.deleteAll();
     }
-    @BeforeEach
-    public void clearDatabaseBefore() {
-        departmentRepository.deleteAll();
-        carRepository.deleteAll();
-    }
 
 
 
     @Test
     @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void addSomeCarsToDepartment() {
         //Given
         Department department = new Department("Test");
@@ -56,17 +53,19 @@ public class DepartmentSuite {
         carRepository.save(secondCar);
 
         //When
-        final Set<Car> carListFromDepartmentBeforeAdd = departmentRepository.findById(department.getId()).get().getCarSet();
+        final Set<Car> carListFromDepartmentBeforeAdd = departmentRepository.findById(1L).get().getCars();
         Assertions.assertEquals(0, carListFromDepartmentBeforeAdd.size());
 
-        department.addCar(car);
-        department.addCar(secondCar);
+        Set<Car> cars = new HashSet<>();
+        cars.add(car);
+        cars.add(secondCar);
+        department.setCars(cars);
 
-        final Optional<Department> departmentOptional = departmentRepository.findById(department.getId());
+        final Optional<Department> departmentOptional = departmentRepository.findById(1L);
         Assertions.assertTrue(departmentOptional.isPresent());
 
         final Department departmentFromDatabase = departmentOptional.get();
-        final Set<Car> carListFromDepartmentAfterAdd = departmentFromDatabase.getCarSet();
+        final Set<Car> carListFromDepartmentAfterAdd = departmentFromDatabase.getCars();
 
         //Then
         Assertions.assertEquals("Test", departmentFromDatabase.getName());
@@ -83,14 +82,17 @@ public class DepartmentSuite {
         carRepository.save(car);
 
         //When
-        final Set<Car> carListFromDepartmentBeforeAdd = departmentRepository.findById(department.getId()).get().getCarSet(); //isPresent nie jest konieczne, zależy co sprawdzasz
+        final Set<Car> carListFromDepartmentBeforeAdd = departmentRepository.findById(1L).get().getCars(); //isPresent nie jest konieczne, zależy co sprawdzasz
         Assertions.assertEquals(0 , carListFromDepartmentBeforeAdd.size());
-        department.addCar(car);
-        final Optional<Department> departmentOptional = departmentRepository.findById(department.getId());
+        Set<Car> cars = new HashSet<>();
+        cars.add(car);
+        department.setCars(cars);
+
+        final Optional<Department> departmentOptional = departmentRepository.findById(1L);
         Assertions.assertTrue(departmentOptional.isPresent());
         final Department departmentFromDatabase = departmentOptional.get();
-        final Set<Car> carListFromDepartmentAfterAdd = departmentFromDatabase.getCarSet();
-        final Set<Car> departmentCarListAfterDeleteCar = department.getCarSet();
+        final Set<Car> carListFromDepartmentAfterAdd = departmentFromDatabase.getCars();
+        final Set<Car> departmentCarListAfterDeleteCar = department.getCars();
         final List<Car> allCarsAfterDeleteCarFromDepartment = carRepository.findAll();
         //Then
         //Lista w Hibernate to persistantbag - nie ma kolejności
@@ -100,26 +102,27 @@ public class DepartmentSuite {
 
     @Test
     @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void addAreaToDepartmentTest() {
         //Given
         Department department = new Department("TestDepartment");
         Area area = new Area("TestArea");
 
         areaRepository.save(area);
-        Assertions.assertEquals(area, areaRepository.findById(area.getId()).get());
-        Assertions.assertEquals("TestArea", areaRepository.findById(area.getId()).get().getName());
-        Optional<Area> areaBeforeAction = areaRepository.findById(area.getId());
+        Assertions.assertEquals(area, areaRepository.findById(1L).get());
+        Assertions.assertEquals("TestArea", areaRepository.findById(1L).get().getName());
+        Optional<Area> areaBeforeAction = areaRepository.findById(1L);
         Assertions.assertTrue(areaBeforeAction.isPresent());
         Assertions.assertEquals(0, areaBeforeAction.get().getDepartments().size());
 
         departmentRepository.save(department);
-        Assertions.assertEquals(department, departmentRepository.findById(department.getId()).get());
-        Assertions.assertEquals("TestDepartment", departmentRepository.findById(department.getId()).get().getName());
-        Assertions.assertNull(departmentRepository.findById(department.getId()).get().getArea());
+        Assertions.assertEquals(department, departmentRepository.findById(1L).get());
+        Assertions.assertEquals("TestDepartment", departmentRepository.findById(1L).get().getName());
+        Assertions.assertNull(departmentRepository.findById(1L).get().getArea());
 
         //When
-        department.addArea(area);
-        final Area areaInDepartmentAfterAddArea = departmentRepository.findById(department.getId()).get().getArea();
+        department.setArea(area);
+        final Area areaInDepartmentAfterAddArea = departmentRepository.findById(1L).get().getArea();
         //Then
         Assertions.assertNotNull(areaInDepartmentAfterAddArea);
         Assertions.assertEquals("TestArea" ,areaInDepartmentAfterAddArea.getName());
@@ -127,6 +130,7 @@ public class DepartmentSuite {
 
     @Test
     @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteAreaFromDepartmentTest() {
         //Given
         Department department = new Department("TestDepartment");
@@ -134,22 +138,22 @@ public class DepartmentSuite {
         Area area = new Area("TestArea");
 
         areaRepository.save(area);
-        Assertions.assertEquals(area, areaRepository.findById(area.getId()).get());
-        Assertions.assertEquals("TestArea", areaRepository.findById(area.getId()).get().getName());
-        Optional<Area> areaBeforeAction = areaRepository.findById(area.getId());
+        Assertions.assertEquals(area, areaRepository.findById(1L).get());
+        Assertions.assertEquals("TestArea", areaRepository.findById(1L).get().getName());
+        Optional<Area> areaBeforeAction = areaRepository.findById(1L);
         Assertions.assertTrue(areaBeforeAction.isPresent());
         Assertions.assertEquals(0, areaBeforeAction.get().getDepartments().size());
 
         departmentRepository.save(department);
         departmentRepository.save(secondDepartment);
-        Assertions.assertEquals(department, departmentRepository.findById(department.getId()).get());
-        Assertions.assertEquals("TestDepartmentSecond", departmentRepository.findById(secondDepartment.getId()).get().getName());
-        Assertions.assertNull(departmentRepository.findById(department.getId()).get().getArea());
+        Assertions.assertEquals(department, departmentRepository.findById(1L).get());
+        Assertions.assertEquals("TestDepartmentSecond", departmentRepository.findById(2L).get().getName());
+        Assertions.assertNull(departmentRepository.findById(1L).get().getArea());
 
         //When
         department.addArea(area);
         secondDepartment.addArea(area);
-        final Area areaInDepartmentAfterAddArea = departmentRepository.findById(department.getId()).get().getArea();
+        final Area areaInDepartmentAfterAddArea = departmentRepository.findById(1L).get().getArea();
         Assertions.assertNotNull(areaInDepartmentAfterAddArea);
         Assertions.assertEquals("TestArea" ,areaInDepartmentAfterAddArea.getName());
         department.removeArea();
@@ -161,6 +165,7 @@ public class DepartmentSuite {
 
     @Test
     @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteAreaFromDepartmentLookFromAreaTest() {
         //Given
         Department department = new Department("TestDepartment");
@@ -168,26 +173,26 @@ public class DepartmentSuite {
         Area area = new Area("TestArea");
 
         areaRepository.save(area);
-        Assertions.assertEquals(area, areaRepository.findById(area.getId()).get());
-        Assertions.assertEquals("TestArea", areaRepository.findById(area.getId()).get().getName());
-        Optional<Area> areaBeforeAction = areaRepository.findById(area.getId());
+        Assertions.assertEquals(area, areaRepository.findById(1L).get());
+        Assertions.assertEquals("TestArea", areaRepository.findById(1L).get().getName());
+        Optional<Area> areaBeforeAction = areaRepository.findById(1L);
         Assertions.assertTrue(areaBeforeAction.isPresent());
         Assertions.assertEquals(0, areaBeforeAction.get().getDepartments().size());
 
         departmentRepository.save(department);
         departmentRepository.save(secondDepartment);
-        Assertions.assertEquals(department, departmentRepository.findById(department.getId()).get());
-        Assertions.assertEquals("TestDepartmentSecond", departmentRepository.findById(secondDepartment.getId()).get().getName());
-        Assertions.assertNull(departmentRepository.findById(department.getId()).get().getArea());
+        Assertions.assertEquals(department, departmentRepository.findById(1L).get());
+        Assertions.assertEquals("TestDepartmentSecond", departmentRepository.findById(2L).get().getName());
+        Assertions.assertNull(departmentRepository.findById(1L).get().getArea());
 
         //When
-        department.addArea(area);
-        secondDepartment.addArea(area);
-        final Area areaInFirstDepartmentAfterAddArea = departmentRepository.findById(department.getId()).get().getArea();
+        department.setArea(area);
+        secondDepartment.setArea(area);
+        final Area areaInFirstDepartmentAfterAddArea = departmentRepository.findById(1L).get().getArea();
         Assertions.assertNotNull(areaInFirstDepartmentAfterAddArea);
         Assertions.assertEquals("TestArea" ,areaInFirstDepartmentAfterAddArea.getName());
-        department.removeArea();
-        secondDepartment.removeArea();
+        department.setArea(null);
+        secondDepartment.setArea(null);
         //Then
         Assertions.assertEquals(0, area.getDepartments().size());
         Assertions.assertNull(department.getArea());

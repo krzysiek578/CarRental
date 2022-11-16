@@ -1,6 +1,9 @@
-package com.app.portfolio.database.DatabaseAndSpringBoot;
+package com.app.portfolio.database.DatabaseAndSpringBoot.car;
 
 
+import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.Department;
+import com.app.portfolio.database.DatabaseAndSpringBoot.PetrolType;
+import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.RentalOffice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,7 +34,7 @@ import java.util.Set;
 // GenerationType
 public class Car {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String brand;
     private String model;
@@ -40,8 +43,8 @@ public class Car {
     private PetrolType petrolType;
     private boolean enabled;
 
-    @ManyToMany(mappedBy = "carSet")
-    private Set<Department> departmentsSet = new HashSet<>();
+    @ManyToMany(mappedBy = "cars")
+    private Set<Department> departments = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RentalOffice rentalOffice;
@@ -53,22 +56,15 @@ public class Car {
         this.enabled = enabled;
     }
 
-    public void setRentalOffice(RentalOffice rentalOffice) {
-        this.rentalOffice = rentalOffice;
-    }
-
-    public void removeRentalOffice() {
-        rentalOffice = null;
-    }
 
     public void addDepartment(Department department) {
-        this.departmentsSet.add(department);
-        department.getCarSet().add(this);
+        this.getDepartments().add(department);
+        department.getCars().add(this);
     }
 
     public void removeDepartment(Department department) {
-        this.departmentsSet.remove(department);
-        department.getCarSet().remove(this);
+        this.getDepartments().remove(department);
+        department.getCars().remove(this);
     }
 
     @Override

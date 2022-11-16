@@ -1,4 +1,4 @@
-package com.app.portfolio.database.DatabaseAndSpringBoot;
+package com.app.portfolio.database.DatabaseAndSpringBoot.car;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

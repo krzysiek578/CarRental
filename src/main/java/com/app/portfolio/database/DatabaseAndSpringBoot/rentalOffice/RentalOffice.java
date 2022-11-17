@@ -50,34 +50,6 @@ public class RentalOffice {
         this.postalCode = postalCode;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public Set<Car> getCars() {
-        return cars;
-    }
-
-    public void setCars(Set<Car> cars) {
-        this.cars = cars;
-    }
-
-    public Set<Department> getDepartments() {
-        return departments;
-    }
-
     public void setDepartments(Set<Department> departments) {
         this.departments = departments;
     }

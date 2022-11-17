@@ -2,8 +2,8 @@ package com.app.portfolio.database.DatabaseAndSpringBoot.databaseTest;
 
 import com.app.portfolio.database.DatabaseAndSpringBoot.car.Car;
 import com.app.portfolio.database.DatabaseAndSpringBoot.car.CarRepository;
-import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.Department;
-import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.DepartmentRepository;
+import com.app.portfolio.database.DatabaseAndSpringBoot.department.Department;
+import com.app.portfolio.database.DatabaseAndSpringBoot.department.DepartmentRepository;
 import com.app.portfolio.database.DatabaseAndSpringBoot.PetrolType;
 import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.RentalOffice;
 import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.RentalOfficeRepository;

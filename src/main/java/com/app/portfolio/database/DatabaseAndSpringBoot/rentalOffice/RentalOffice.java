@@ -1,7 +1,7 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice;
 
 import com.app.portfolio.database.DatabaseAndSpringBoot.car.Car;
-import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.Department;
+import com.app.portfolio.database.DatabaseAndSpringBoot.department.Department;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,6 @@ import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
 import javax.persistence.GenerationType;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +38,7 @@ public class RentalOffice {
     @OneToMany(mappedBy = "rentalOffice", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private Set<Car> cars = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "rentalOffice", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "rentalOffice", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private Set<Department> departments = new HashSet<>();
 
 
@@ -48,10 +47,6 @@ public class RentalOffice {
         this.city = city;
         this.street = street;
         this.postalCode = postalCode;
-    }
-
-    public void setDepartments(Set<Department> departments) {
-        this.departments = departments;
     }
 
     public void addDepartment(Department department) {

@@ -1,4 +1,4 @@
-package com.app.portfolio.database.DatabaseAndSpringBoot.deprtment;
+package com.app.portfolio.database.DatabaseAndSpringBoot.department;
 
 import com.app.portfolio.database.DatabaseAndSpringBoot.area.Area;
 import com.app.portfolio.database.DatabaseAndSpringBoot.car.Car;

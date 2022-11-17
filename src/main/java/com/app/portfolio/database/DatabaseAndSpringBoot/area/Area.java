@@ -1,7 +1,7 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot.area;
 
 
-import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.Department;
+import com.app.portfolio.database.DatabaseAndSpringBoot.department.Department;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

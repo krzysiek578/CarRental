@@ -1,4 +1,4 @@
-package com.app.portfolio.database.DatabaseAndSpringBoot.deprtment;
+package com.app.portfolio.database.DatabaseAndSpringBoot.department;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

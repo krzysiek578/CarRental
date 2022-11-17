@@ -1,7 +1,7 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot.databaseTest;
 
 import com.app.portfolio.database.DatabaseAndSpringBoot.car.CarRepository;
-import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.DepartmentRepository;
+import com.app.portfolio.database.DatabaseAndSpringBoot.department.DepartmentRepository;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,10 +3,9 @@ package com.app.portfolio.database.DatabaseAndSpringBoot.databaseTest;
 
 import com.app.portfolio.database.DatabaseAndSpringBoot.car.Car;
 import com.app.portfolio.database.DatabaseAndSpringBoot.car.CarRepository;
-import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.DepartmentRepository;
+import com.app.portfolio.database.DatabaseAndSpringBoot.department.DepartmentRepository;
 import com.app.portfolio.database.DatabaseAndSpringBoot.PetrolType;
-import com.app.portfolio.database.DatabaseAndSpringBoot.deprtment.Department;
-import org.hibernate.SessionFactory;
+import com.app.portfolio.database.DatabaseAndSpringBoot.department.Department;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

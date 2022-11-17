@@ -1,20 +1,26 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot.databaseTest;
 
 
-import com.app.portfolio.database.DatabaseAndSpringBoot.Car;
-import com.app.portfolio.database.DatabaseAndSpringBoot.CarRepository;
+import com.app.portfolio.database.DatabaseAndSpringBoot.car.Car;
+import com.app.portfolio.database.DatabaseAndSpringBoot.car.CarRepository;
+import com.app.portfolio.database.DatabaseAndSpringBoot.department.DepartmentRepository;
 import com.app.portfolio.database.DatabaseAndSpringBoot.PetrolType;
+import com.app.portfolio.database.DatabaseAndSpringBoot.department.Department;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @SpringBootTest
@@ -24,18 +30,30 @@ public class CarSuite {
     @Autowired
     private CarRepository carRepository;
 
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+
     @AfterEach
-    public void reset() {
+    public void clearDatabase() {
+        departmentRepository.deleteAll();
+        carRepository.deleteAll();
+    }
+    @BeforeEach
+    public void clearDatabaseBefore() {
+        departmentRepository.deleteAll();
         carRepository.deleteAll();
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void saveCarTest() {
         //Given
         final Car car = new Car("Audi", "S3", PetrolType.GASOLINE, true);
         //When
         carRepository.save(car);
-        final Optional<Car> resultCarOptional = carRepository.findById(car.getId());
+        final Optional<Car> resultCarOptional = carRepository.findById(1L);
         //Then
         Assertions.assertTrue(resultCarOptional.isPresent());
         final Car resultCar = resultCarOptional.get();
@@ -47,6 +65,7 @@ public class CarSuite {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void testSaveAll() {
         //Given
         final List<Car> carList = List.of(
@@ -67,6 +86,7 @@ public class CarSuite {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteCarTest() {
         //Given
         final Car testCar = new Car("Audi", "S3", PetrolType.GASOLINE, true);
@@ -82,6 +102,7 @@ public class CarSuite {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteAllTest() {
         //Given
         final Car firstTestCar = new Car("Audi", "S3", PetrolType.ELECTRIC, true);
@@ -102,25 +123,25 @@ public class CarSuite {
     }
 
 
-
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void findByIdTest() {
         //Given
         final Car car = new Car("Audi", "S3", PetrolType.ELECTRIC, true);
         carRepository.save(car);
         //When
-        final Optional<Car> resultCarOptional = carRepository.findById(car.getId());
+        final Optional<Car> resultCarOptional = carRepository.findById(1L);
         //Then
         Assertions.assertTrue(resultCarOptional.isPresent());
         final Car resultCar = resultCarOptional.get();
         Assertions.assertEquals(car, resultCar);
         Assertions.assertEquals("Audi", resultCar.getBrand());
         Assertions.assertEquals("S3", resultCar.getModel());
-        Assertions.assertEquals(10, resultCar.getId());
         Assertions.assertEquals(PetrolType.ELECTRIC, resultCar.getPetrolType());
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void findAllTest() {
         //Given
         final Car firstTestCar = new Car("Audi", "S3", PetrolType.ELECTRIC, true);
@@ -147,13 +168,14 @@ public class CarSuite {
 
     @Test
     @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void changeVariableTakeFromDatabase() {
         //Given
         final Car car = new Car("Audi", "S3", PetrolType.ELECTRIC, true);
         carRepository.save(car);
         //When
-        carRepository.findById(car.getId()).get().setBrand("Volvo");
-        final Optional<Car> resultCarOptionalAfterChange = carRepository.findById(car.getId());
+        carRepository.findById(1L).get().setBrand("Volvo");
+        final Optional<Car> resultCarOptionalAfterChange = carRepository.findById(1L);
 
         //Then
         Assertions.assertTrue(resultCarOptionalAfterChange.isPresent());
@@ -161,5 +183,74 @@ public class CarSuite {
         Assertions.assertEquals("Volvo", resultCarAfterChange.getBrand());
     }
 
+
+    @Test
+    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void departmentsAddToOneCarTest() {
+        //Given
+        Car car = new Car("Mercedes", "C63", PetrolType.ELECTRIC, false);
+        carRepository.save(car);
+
+        Department department = new Department("Test");
+        Department secondDepartment = new Department("TestSecond");
+        departmentRepository.save(department);
+        departmentRepository.save(secondDepartment);
+
+        Set<Department> departmentList = new HashSet<>(Set.of(department, secondDepartment));
+        car.setDepartments(departmentList);
+
+
+        //When
+        List<Department> departmentListFromDatabase = departmentRepository.findAll();
+
+        //Then
+        Assertions.assertEquals(2, departmentList.size());
+        Assertions.assertEquals("TestSecond", departmentListFromDatabase.get(1).getName());
+        Assertions.assertEquals(2, carRepository.findById(1L).get().getDepartments().size());
+    }
+
+    @Test
+    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void deleteDepartmentsFromCarTest() {
+        //Given
+        Car car = new Car("Mercedes", "C63", PetrolType.ELECTRIC, false);
+        carRepository.save(car);
+        final Car carBeforeAddDepartments = carRepository.findById(1L).get();
+        Assertions.assertEquals("Mercedes",carBeforeAddDepartments.getBrand());
+
+        Department department = new Department("Test");
+        Department secondDepartment = new Department("TestSecond");
+        departmentRepository.save(department);
+        departmentRepository.save(secondDepartment);
+
+        Set<Department> departmentList = new HashSet<>(Set.of(department, secondDepartment));
+        car.setDepartments(departmentList);
+        Assertions.assertEquals(2, departmentList.size());
+
+        //When
+        final List<Department> departmentListFromDatabase = departmentRepository.findAll();
+        Assertions.assertEquals(2, departmentListFromDatabase.size());
+
+        final List<Car> carList = carRepository.findAll();
+
+
+
+
+        car.getDepartments().remove(department);
+        car.getDepartments().remove(secondDepartment);
+        final List<Department> departmentsAfterRemoveFromCar = departmentRepository.findAll();
+        final Set<Department> departmentsFromCar = car.getDepartments();
+        //Then
+
+
+        Assertions.assertEquals("TestSecond", departmentRepository.findById(2L).get().getName());
+        Assertions.assertFalse(department.getCars().contains(car));
+        Assertions.assertFalse(secondDepartment.getCars().contains(car));
+        Assertions.assertEquals(2, departmentsAfterRemoveFromCar.size());
+        Assertions.assertEquals(0, departmentsFromCar.size());
+        Assertions.assertEquals(1, carList.size());
+    }
 
 }

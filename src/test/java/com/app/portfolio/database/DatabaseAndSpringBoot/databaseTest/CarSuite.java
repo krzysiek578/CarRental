@@ -253,4 +253,16 @@ public class CarSuite {
         Assertions.assertEquals(1, carList.size());
     }
 
+    @Test
+    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void testCustomFindById() {
+        //Given
+        Car car = new Car("Mercedes", "Amg", PetrolType.ELECTRIC, true);
+        //When
+ //       Optional<Car> optionalCarFromDatabase =
+
+        //Then
+//        Assertions.assertEquals(car, optionalCarFromDatabase);
+    }
 }

@@ -1,6 +1,7 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot.area;
 
 
+
 import com.app.portfolio.database.DatabaseAndSpringBoot.department.Department;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.GenerationType;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -26,7 +28,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area {
+public class Area{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -48,4 +50,6 @@ public class Area {
         this.departments.remove(department);
         department.setArea(null);
     }
+
+
 }

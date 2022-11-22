@@ -2,6 +2,7 @@ package com.app.portfolio.database.DatabaseAndSpringBoot.car;
 
 
 
+import com.app.portfolio.database.DatabaseAndSpringBoot.Model;
 import com.app.portfolio.database.DatabaseAndSpringBoot.department.Department;
 import com.app.portfolio.database.DatabaseAndSpringBoot.PetrolType;
 import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.RentalOffice;
@@ -35,7 +36,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 // GenerationType
-public class Car{
+public class Car implements Model<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

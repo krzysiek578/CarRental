@@ -2,6 +2,7 @@ package com.app.portfolio.database.DatabaseAndSpringBoot.area;
 
 
 
+import com.app.portfolio.database.DatabaseAndSpringBoot.Model;
 import com.app.portfolio.database.DatabaseAndSpringBoot.department.Department;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +29,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area{
+public class Area implements Model<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -50,6 +51,5 @@ public class Area{
         this.departments.remove(department);
         department.setArea(null);
     }
-
 
 }

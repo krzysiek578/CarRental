@@ -1,20 +1,16 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot;
 
 
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-@NoArgsConstructor
-public abstract class GenericManagerBase<T , ID> implements GenericManager<T, ID> {
 
-    private JpaRepository<T, ID> jpaRepository;
+public class GenericManagerBase<T extends Model<ID>, ID> implements GenericManager<T, ID> {
+    private final JpaRepository<T, ID> jpaRepository;
 
-    @Autowired
-    public GenericManagerBase(JpaRepository<T, ID> jpaRepository) {
+    public GenericManagerBase(final JpaRepository<T, ID> jpaRepository) {
         this.jpaRepository = jpaRepository;
     }
 
@@ -24,8 +20,23 @@ public abstract class GenericManagerBase<T , ID> implements GenericManager<T, ID
     }
 
     @Override
-    public List findAll() {
+    public List<T> findAll() {
         return jpaRepository.findAll();
+    }
+
+    @Override
+    public T save(T toSave) {
+        if (toSave.getId() == null) {
+            toSave.setId(null);
+            return jpaRepository.save(toSave);
+        }
+        return jpaRepository.save(toSave);
+    }
+
+    @Override
+    public Optional<T> update(T toUpdate) {
+        return findById(toUpdate.getId())
+                .map(obj -> jpaRepository.save(toUpdate));
     }
 
 

@@ -1,5 +1,6 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot.department;
 
+import com.app.portfolio.database.DatabaseAndSpringBoot.Model;
 import com.app.portfolio.database.DatabaseAndSpringBoot.area.Area;
 import com.app.portfolio.database.DatabaseAndSpringBoot.car.Car;
 import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.RentalOffice;
@@ -29,7 +30,7 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Department {
+public class Department implements Model<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

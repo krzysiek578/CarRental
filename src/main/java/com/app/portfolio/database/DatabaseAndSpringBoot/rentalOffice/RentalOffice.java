@@ -1,5 +1,6 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice;
 
+import com.app.portfolio.database.DatabaseAndSpringBoot.Model;
 import com.app.portfolio.database.DatabaseAndSpringBoot.car.Car;
 import com.app.portfolio.database.DatabaseAndSpringBoot.department.Department;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ import java.util.Set;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class RentalOffice {
+public class RentalOffice implements Model<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

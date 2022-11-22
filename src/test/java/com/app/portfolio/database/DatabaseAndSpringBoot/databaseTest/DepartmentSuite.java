@@ -37,18 +37,16 @@ public class DepartmentSuite {
         carRepository.deleteAll();
     }
 
-
-
     @Test
     @Transactional
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void addSomeCarsToDepartment() {
         //Given
-        Department department = new Department("Test");
+        final Department department = new Department("Test");
         departmentRepository.save(department);
 
-        Car car = new Car("BMW", "M3", PetrolType.ELECTRIC, true);
-        Car secondCar = new Car("Audi", "A3", PetrolType.ELECTRIC, true);
+        final Car car = new Car("BMW", "M3", PetrolType.ELECTRIC, true);
+        final Car secondCar = new Car("Audi", "A3", PetrolType.ELECTRIC, true);
         carRepository.save(car);
         carRepository.save(secondCar);
 

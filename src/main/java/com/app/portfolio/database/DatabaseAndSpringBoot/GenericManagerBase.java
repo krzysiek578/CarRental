@@ -26,10 +26,9 @@ public class GenericManagerBase<T extends Model<ID>, ID> implements GenericManag
 
     @Override
     public T save(T toSave) {
-        if (toSave.getId() == null) {
-            return repository.save(toSave);
+        if (toSave.getId() != null) {
+            toSave.setId(null);
         }
-        toSave.setId(null);
         return repository.save(toSave);
     }
 

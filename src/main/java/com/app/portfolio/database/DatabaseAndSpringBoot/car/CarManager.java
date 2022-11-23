@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CarManager extends GenericManagerBase<Car, Long> {
-    public CarManager(JpaRepository<Car, Long> jpaRepository) {
-        super(jpaRepository);
+    public CarManager(CarRepository carRepository) {
+        super(carRepository);
     }
 }

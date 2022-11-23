@@ -163,7 +163,7 @@ public class AreaSuite {
     @Test
     @Transactional
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    public void testCustomFinAll() {
+    public void testCustomFindAll() {
         //Given
         final Area area = new Area("FirstArea");
         final Area areaSecond = new Area("SecondArea");
@@ -185,6 +185,14 @@ public class AreaSuite {
         //Then
         Assertions.assertEquals(2, areasAfterFindAll.size());
         Assertions.assertEquals("FirstArea", areasAfterFindAll.get(0).getName());
+    }
+
+    @Test
+    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void testCustomDeleteAreaWhichDoseNotExist() {
+        areaManager.delete(1L);
+
     }
 
 }

@@ -8,40 +8,42 @@ import java.util.Optional;
 
 
 public class GenericManagerBase<T extends Model<ID>, ID> implements GenericManager<T, ID> {
-    private final JpaRepository<T, ID> jpaRepository;
+    private final JpaRepository<T, ID> repository;
 
-    public GenericManagerBase(final JpaRepository<T, ID> jpaRepository) {
-        this.jpaRepository = jpaRepository;
+    public GenericManagerBase(final JpaRepository<T, ID> repository) {
+        this.repository = repository;
     }
 
     @Override
     public Optional<T> findById(ID id) {
-        return jpaRepository.findById(id);
+        return repository.findById(id);
     }
 
     @Override
     public List<T> findAll() {
-        return jpaRepository.findAll();
+        return repository.findAll();
     }
 
     @Override
     public T save(T toSave) {
         if (toSave.getId() == null) {
-            toSave.setId(null);
-            return jpaRepository.save(toSave);
+            return repository.save(toSave);
         }
-        return jpaRepository.save(toSave);
+        toSave.setId(null);
+        return repository.save(toSave);
     }
 
     @Override
     public Optional<T> update(T toUpdate) {
         return findById(toUpdate.getId())
-                .map(obj -> jpaRepository.save(toUpdate));
+                .map(obj -> repository.save(toUpdate));
     }
 
 
     @Override
     public void delete(ID id) {
-        jpaRepository.deleteById(id);
+        if (repository.existsById(id)){
+            repository.deleteById(id);
+        }
     }
 }

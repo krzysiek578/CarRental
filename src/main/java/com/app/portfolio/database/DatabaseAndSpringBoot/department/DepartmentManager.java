@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DepartmentManager extends GenericManagerBase<Department, Long> {
-    public DepartmentManager(JpaRepository<Department, Long> jpaRepository) {
-        super(jpaRepository);
+    public DepartmentManager(DepartmentRepository departmentRepository) {
+        super(departmentRepository);
     }
 }

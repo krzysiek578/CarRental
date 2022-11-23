@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RentalOfficeManager extends GenericManagerBase<RentalOffice, Long> {
-    public RentalOfficeManager(JpaRepository<RentalOffice, Long> jpaRepository) {
-        super(jpaRepository);
+    public RentalOfficeManager(RentalOfficeRepository rentalOfficeRepository) {
+        super(rentalOfficeRepository);
     }
 }

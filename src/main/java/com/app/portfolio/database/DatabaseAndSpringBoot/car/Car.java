@@ -1,6 +1,8 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot.car;
 
 
+
+import com.app.portfolio.database.DatabaseAndSpringBoot.Model;
 import com.app.portfolio.database.DatabaseAndSpringBoot.department.Department;
 import com.app.portfolio.database.DatabaseAndSpringBoot.PetrolType;
 import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.RentalOffice;
@@ -9,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,6 +25,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -32,7 +36,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 // GenerationType
-public class Car {
+public class Car implements Model<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -49,7 +53,11 @@ public class Car {
     @ManyToOne(fetch = FetchType.LAZY)
     private RentalOffice rentalOffice;
 
+
+
+
     public Car(String brand, String model, PetrolType petrolType, boolean enabled) {
+        super();
         this.brand = brand;
         this.model = model;
         this.petrolType = petrolType;
@@ -90,4 +98,6 @@ public class Car {
                 ", enabled=" + enabled +
                 '}';
     }
+
+
 }

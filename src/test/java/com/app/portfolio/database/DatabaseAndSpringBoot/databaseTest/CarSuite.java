@@ -215,7 +215,7 @@ public class CarSuite {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteDepartmentsFromCarTest() {
         //Given
-        Car car = new Car("Mercedes", "C63", PetrolType.ELECTRIC, false);
+        final Car car = new Car("Mercedes", "C63", PetrolType.ELECTRIC, false);
         carRepository.save(car);
         final Car carBeforeAddDepartments = carRepository.findById(1L).get();
         Assertions.assertEquals("Mercedes",carBeforeAddDepartments.getBrand());
@@ -225,7 +225,7 @@ public class CarSuite {
         departmentRepository.save(department);
         departmentRepository.save(secondDepartment);
 
-        Set<Department> departmentList = new HashSet<>(Set.of(department, secondDepartment));
+        final Set<Department> departmentList = new HashSet<>(Set.of(department, secondDepartment));
         car.setDepartments(departmentList);
         Assertions.assertEquals(2, departmentList.size());
 
@@ -242,9 +242,9 @@ public class CarSuite {
         car.getDepartments().remove(secondDepartment);
         final List<Department> departmentsAfterRemoveFromCar = departmentRepository.findAll();
         final Set<Department> departmentsFromCar = car.getDepartments();
+
+
         //Then
-
-
         Assertions.assertEquals("TestSecond", departmentRepository.findById(2L).get().getName());
         Assertions.assertFalse(department.getCars().contains(car));
         Assertions.assertFalse(secondDepartment.getCars().contains(car));
@@ -252,5 +252,6 @@ public class CarSuite {
         Assertions.assertEquals(0, departmentsFromCar.size());
         Assertions.assertEquals(1, carList.size());
     }
+
 
 }

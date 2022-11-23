@@ -85,7 +85,7 @@ public class RentalOfficeSuite {
         Assertions.assertEquals(rentalOffice, carRepository.findById(1L).get().getRentalOffice());
 
         rentalOfficeRepository.deleteAll();
-        List<Car> carRepositoryAll = carRepository.findAll();
+        final List<Car> carRepositoryAll = carRepository.findAll();
         //Then
         Assertions.assertEquals(0, rentalOfficeRepository.findAll().size());
         Assertions.assertEquals(0, carRepositoryAll.size());
@@ -110,10 +110,10 @@ public class RentalOfficeSuite {
         carsSetBefore.add(secondCar);
 
         rentalOffice.setCars(carsSetBefore);
-        List<Car> carRepositoryAllBeforeDeleteCar = carRepository.findAll();
+        final List<Car> carRepositoryAllBeforeDeleteCar = carRepository.findAll();
 
         rentalOffice.getCars().remove(car);
-        List<Car> carRepositoryAll = carRepository.findAll();
+        final List<Car> carRepositoryAll = carRepository.findAll();
         //Then
         Assertions.assertEquals(2, carRepositoryAllBeforeDeleteCar.size());
         Assertions.assertFalse(carRepositoryAll.contains(car));
@@ -134,7 +134,7 @@ public class RentalOfficeSuite {
         Assertions.assertEquals("DepartmentSecond", departmentRepository.getReferenceById(2L).getName());
         Assertions.assertNull(departmentRepository.getReferenceById(2L).getRentalOffice());
 
-        RentalOffice rentalOffice = new RentalOffice("Office in Warsaw", "Warsaw", "Ul.Trakt Brzeski", "12-345");
+        final RentalOffice rentalOffice = new RentalOffice("Office in Warsaw", "Warsaw", "Ul.Trakt Brzeski", "12-345");
         rentalOfficeRepository.save(rentalOffice);
 
         Assertions.assertEquals("Office in Warsaw", rentalOfficeRepository.getReferenceById(1L).getName());
@@ -196,7 +196,7 @@ public class RentalOfficeSuite {
         departmentRepository.save(department);
         departmentRepository.save(secondDepartment);
 
-        RentalOffice rentalOffice = new RentalOffice("Office in Warsaw", "Warsaw", "Ul.Trakt Brzeski", "12-345");
+        final RentalOffice rentalOffice = new RentalOffice("Office in Warsaw", "Warsaw", "Ul.Trakt Brzeski", "12-345");
         rentalOfficeRepository.save(rentalOffice);
 
         //When
@@ -206,11 +206,11 @@ public class RentalOfficeSuite {
         Assertions.assertEquals(rentalOffice, departmentRepository.findById(2L).get().getRentalOffice());
         Assertions.assertEquals("12-345", departmentRepository.findById(2L).get().getRentalOffice().getPostalCode());
 
-        List<Department> departmentRepositoryAllBeforeDeleteDepartment = departmentRepository.findAll();
+        final List<Department> departmentRepositoryAllBeforeDeleteDepartment = departmentRepository.findAll();
         Assertions.assertEquals(2, departmentRepositoryAllBeforeDeleteDepartment.size());
 
         rentalOffice.getDepartments().remove(department);
-        List<Department> departmentRepositoryAll = departmentRepository.findAll();
+        final List<Department> departmentRepositoryAll = departmentRepository.findAll();
         //Then
         Assertions.assertFalse(departmentRepositoryAll.contains(department));
         Assertions.assertEquals(1, departmentRepositoryAll.size());

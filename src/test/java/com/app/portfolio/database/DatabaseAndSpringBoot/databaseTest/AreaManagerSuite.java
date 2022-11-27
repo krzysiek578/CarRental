@@ -43,6 +43,7 @@ public class AreaManagerSuite {
         //When
         Assertions.assertEquals(3, areas.size());
         Assertions.assertEquals("SecondTestArea", areas.get(1).getName());
+        verify(areaRepository, times(1)).findAll();
     }
 
 
@@ -56,6 +57,7 @@ public class AreaManagerSuite {
         area.ifPresent(a -> {
             Assertions.assertEquals("FindMockArea", a.getName());
         });
+        verify(areaRepository, times(1)).findById(2L);
     }
 
 

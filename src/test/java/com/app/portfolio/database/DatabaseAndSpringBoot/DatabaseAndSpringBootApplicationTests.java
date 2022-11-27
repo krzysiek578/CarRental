@@ -8,6 +8,7 @@ class DatabaseAndSpringBootApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }

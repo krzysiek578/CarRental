@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AreaManager extends GenericManagerBase<Area, Long> {
     public AreaManager( AreaRepository areaRepository) {
-        super(areaRepository); //Nie do końca rozumiem to wstrzykiwanie
+        super(areaRepository);
     }
 }

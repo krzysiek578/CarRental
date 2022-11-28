@@ -93,14 +93,14 @@ public class AreaManagerSuite {
         Area area = new Area(2L, "AreaName", null);
         given(areaRepository.findById(2L)).willReturn(Optional.of(area));
         Area changeArea = new Area(2L, "ChangeArea", null);
-        given(areaRepository.save(area)).willReturn(changeArea);
+        given(areaRepository.save(changeArea)).willReturn(changeArea);
         //Then
-        Optional<Area> changedArea = areaManager.update(area);
+        Optional<Area> changedArea = areaManager.update(changeArea);
         //When
         changedArea.ifPresent(a -> {
             Assertions.assertEquals("ChangeArea", a.getName());
         });
-        verify(areaRepository, times(1)).save(area);
+        verify(areaRepository, times(1)).save(changeArea);
     }
 
     @Test

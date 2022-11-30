@@ -21,11 +21,11 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 public class DepartmentManagerSuite {
-    @Mock
-    DepartmentRepository departmentRepository;
-    
     @InjectMocks
     DepartmentManager departmentManager;
+
+    @Mock
+    DepartmentRepository departmentRepository;
 
     @Test
     public void findAllTest() {
@@ -38,9 +38,9 @@ public class DepartmentManagerSuite {
                         )
                 )
         );
-        //Then
-        List<Department> departments = departmentManager.findAll();
         //When
+        List<Department> departments = departmentManager.findAll();
+        //Then
         Assertions.assertEquals(3, departments.size());
         Assertions.assertEquals("SecondDepartment", departments.get(1).getName());
         verify(departmentRepository, times(1)).findAll();
@@ -51,12 +51,10 @@ public class DepartmentManagerSuite {
     public void findByIdTest() {
         //Given
         given(departmentRepository.findById(2L)).willReturn(Optional.of(new Department("ThirdDepartment")));
-        //Then
-        Optional<Department> department = departmentManager.findById(2L);
         //When
-        department.ifPresent(a -> {
-            Assertions.assertEquals("ThirdDepartment", a.getName());
-        });
+        Optional<Department> department = departmentManager.findById(2L);
+        //Then
+        Assertions.assertEquals("ThirdDepartment", department.get().getName());
         verify(departmentRepository, times(1)).findById(2L);
     }
 
@@ -66,9 +64,9 @@ public class DepartmentManagerSuite {
         //Given
         Department department = new Department("ThirdDepartment");
         given(departmentRepository.save(department)).willReturn(department);
-        //Then
-        Department departmentSaved = departmentManager.save(department);
         //When
+        Department departmentSaved = departmentManager.save(department);
+        //Then
         Assertions.assertEquals("ThirdDepartment", departmentSaved.getName());
         verify(departmentRepository, times(1)).save(department);
     }
@@ -78,9 +76,9 @@ public class DepartmentManagerSuite {
         //Given
         Department department = new Department(2L, "ThirdDepartment", null, null, null);
         given(departmentRepository.save(department)).willReturn(department);
-        //Then
-        Department departmentSaved = departmentManager.save(department);
         //When
+        Department departmentSaved = departmentManager.save(department);
+        //Then
         Assertions.assertEquals("ThirdDepartment", departmentSaved.getName());
         Assertions.assertNull(departmentSaved.getId()); //null = niceMock
         verify(departmentRepository, times(1)).save(department);
@@ -94,33 +92,43 @@ public class DepartmentManagerSuite {
         given(departmentRepository.findById(2L)).willReturn(Optional.of(department));
         Department changeDepartment = new Department(2L, "Change", null, null, null);
         given(departmentRepository.save(changeDepartment)).willReturn(changeDepartment);
-        //Then
-        Optional<Department> changedDepartment = departmentManager.update(changeDepartment);
         //When
-        changedDepartment.ifPresent(a -> {
-            Assertions.assertEquals("Change", a.getName());
-        });
+        Optional<Department> changedDepartment = departmentManager.update(changeDepartment);
+        //Then
+        Assertions.assertEquals("Change", changedDepartment.get().getName());
         verify(departmentRepository, times(1)).save(changeDepartment);
+    }
+
+    @Test
+    public void updateNotFoundObjectTest() {
+        //Given
+        given(departmentRepository.findById(2L)).willReturn(Optional.empty());
+        Department changeDepartment = new Department(2L, "Change", null, null, null);
+        given(departmentRepository.save(changeDepartment)).willReturn(changeDepartment);
+        //When
+        Optional<Department> changedDepartment = departmentManager.update(changeDepartment);
+        //Then
+        Assertions.assertFalse(changedDepartment.isPresent());
+        verify(departmentRepository, never()).save(changeDepartment);
     }
 
     @Test
     public void deleteFindObjectTest() {
         //Given
         given(departmentRepository.existsById(2L)).willReturn(true);
-        //Then
+        //When
         departmentManager.delete(2L);
         //
         verify(departmentRepository, times(1)).deleteById(2L);
-        verify(departmentRepository).deleteById(2L);
     }
 
     @Test
     public void deleteNotFindObjectTest() {
         //Given
         given(departmentRepository.existsById(2L)).willReturn(false);
-        //Then
-        departmentManager.delete(2L);
         //When
+        departmentManager.delete(2L);
+        //Then
         verify(departmentRepository, never()).deleteById(2L);
     }
 }

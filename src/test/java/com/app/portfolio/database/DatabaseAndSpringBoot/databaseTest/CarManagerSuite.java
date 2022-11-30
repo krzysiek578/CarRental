@@ -22,11 +22,11 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 public class CarManagerSuite {
-    @Mock
-    CarRepository carRepository;
-    
     @InjectMocks
     CarManager carManager;
+
+    @Mock
+    CarRepository carRepository;
 
     @Test
     public void findAllTest() {
@@ -39,9 +39,9 @@ public class CarManagerSuite {
                         )
                 )
         );
-        //Then
-        List<Car> cars = carManager.findAll();
         //When
+        List<Car> cars = carManager.findAll();
+        //Then
         Assertions.assertEquals(3, cars.size());
         verify(carRepository, times(1)).findAll();
     }
@@ -51,12 +51,12 @@ public class CarManagerSuite {
     public void findByIdTest() {
         //Given
         given(carRepository.findById(2L)).willReturn(Optional.of(new Car("BMW", "E92", PetrolType.GASOLINE, true)));
-        //Then
-        Optional<Car> car = carManager.findById(2L);
         //When
-        car.ifPresent(a -> {
-            Assertions.assertEquals("E92", a.getModel());
-        });
+        Optional<Car> car = carManager.findById(2L);
+        //Then
+
+        Assertions.assertEquals("E92", car.get().getModel());
+
         verify(carRepository, times(1)).findById(2L);
     }
 
@@ -66,9 +66,11 @@ public class CarManagerSuite {
         //Given
         Car car = new Car("BMW", "E92", PetrolType.GASOLINE, true);
         given(carRepository.save(car)).willReturn(car);
-        //Then
-        Car carSaved = carManager.save(car);
         //When
+        Car carSaved = carManager.save(car);
+        //Then
+        Assertions.assertEquals("BMW", carSaved.getBrand());
+        Assertions.assertEquals("E92", carSaved.getModel());
         Assertions.assertEquals(PetrolType.GASOLINE, carSaved.getPetrolType());
         verify(carRepository, times(1)).save(car);
     }
@@ -78,9 +80,9 @@ public class CarManagerSuite {
         //Given
         Car car = new Car(2L ,"BMW", "E92", PetrolType.GASOLINE, true, null, null);
         given(carRepository.save(car)).willReturn(car);
-        //Then
-        Car carSaved = carManager.save(car);
         //When
+        Car carSaved = carManager.save(car);
+        //Then
         Assertions.assertEquals("BMW", carSaved.getBrand());
         Assertions.assertNull(carSaved.getId()); //null = niceMock
         verify(carRepository, times(1)).save(car);
@@ -94,33 +96,45 @@ public class CarManagerSuite {
         given(carRepository.findById(2L)).willReturn(Optional.of(car));
         Car changeCar = new Car(2L ,"BMW", "E92 M3", PetrolType.GASOLINE, true, null, null);
         given(carRepository.save(changeCar)).willReturn(changeCar);
-        //Then
-        Optional<Car> changedCar = carManager.update(changeCar);
         //When
-        changedCar.ifPresent(a -> {
-            Assertions.assertEquals("E92 M3", a.getModel());
-        });
+        Optional<Car> changedCar = carManager.update(changeCar);
+        //Then
+
+        Assertions.assertEquals("E92 M3", changedCar.get().getModel());
         verify(carRepository, times(1)).save(changeCar);
+    }
+
+    @Test
+    public void updateNotFoundObjetTest() {
+        //Given
+        given(carRepository.findById(2L)).willReturn(Optional.empty());
+        Car changeCar = new Car(2L ,"BMW", "E92 M3", PetrolType.GASOLINE, true, null, null);
+        given(carRepository.save(changeCar)).willReturn(changeCar);
+        //When
+        Optional<Car> changedCar = carManager.update(changeCar);
+        //Then
+
+        Assertions.assertFalse(changedCar.isPresent());
+        verify(carRepository, never()).save(changeCar);
     }
 
     @Test
     public void deleteFindObjectTest() {
         //Given
         given(carRepository.existsById(2L)).willReturn(true);
-        //Then
+        //When
         carManager.delete(2L);
-        //
+        //Then
         verify(carRepository, times(1)).deleteById(2L);
-        verify(carRepository).deleteById(2L);
     }
 
     @Test
     public void deleteNotFindObjectTest() {
         //Given
         given(carRepository.existsById(2L)).willReturn(false);
-        //Then
-        carManager.delete(2L);
         //When
+        carManager.delete(2L);
+        //Then
         verify(carRepository, never()).deleteById(2L);
     }
 }

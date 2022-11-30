@@ -21,11 +21,11 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 public class AreaManagerSuite {
-    @Mock
-    AreaRepository areaRepository;
-    
     @InjectMocks
     AreaManager areaManager;
+
+    @Mock
+    AreaRepository areaRepository;
 
     @Test
     public void findAllTest() {
@@ -38,9 +38,9 @@ public class AreaManagerSuite {
                         )
                 )
         );
-        //Then
-        List<Area> areas = areaManager.findAll();
         //When
+        List<Area> areas = areaManager.findAll();
+        //Then
         Assertions.assertEquals(3, areas.size());
         Assertions.assertEquals("SecondTestArea", areas.get(1).getName());
         verify(areaRepository, times(1)).findAll();
@@ -51,12 +51,12 @@ public class AreaManagerSuite {
     public void findByIdTest() {
         //Given
         given(areaRepository.findById(2L)).willReturn(Optional.of(new Area("FindMockArea")));
-        //Then
-        Optional<Area> area = areaManager.findById(2L);
         //When
-        area.ifPresent(a -> {
-            Assertions.assertEquals("FindMockArea", a.getName());
-        });
+        Optional<Area> area = areaManager.findById(2L);
+        //Then
+
+        Assertions.assertEquals("FindMockArea", area.get().getName());
+
         verify(areaRepository, times(1)).findById(2L);
     }
 
@@ -66,9 +66,9 @@ public class AreaManagerSuite {
         //Given
         Area area = new Area("ToSave");
         given(areaRepository.save(area)).willReturn(area);
-        //Then
-        Area areaSaved = areaManager.save(area);
         //When
+        Area areaSaved = areaManager.save(area);
+        //Then
         Assertions.assertEquals("ToSave", areaSaved.getName());
         verify(areaRepository, times(1)).save(area);
     }
@@ -78,9 +78,9 @@ public class AreaManagerSuite {
         //Given
         Area area = new Area(2L, "ToSave", null);
         given(areaRepository.save(area)).willReturn(area);
-        //Then
-        Area areaSaved = areaManager.save(area);
         //When
+        Area areaSaved = areaManager.save(area);
+        //Then
         Assertions.assertEquals("ToSave", areaSaved.getName());
         Assertions.assertNull(areaSaved.getId()); //null = niceMock
         verify(areaRepository, times(1)).save(area);
@@ -94,33 +94,45 @@ public class AreaManagerSuite {
         given(areaRepository.findById(2L)).willReturn(Optional.of(area));
         Area changeArea = new Area(2L, "ChangeArea", null);
         given(areaRepository.save(changeArea)).willReturn(changeArea);
-        //Then
-        Optional<Area> changedArea = areaManager.update(changeArea);
         //When
-        changedArea.ifPresent(a -> {
-            Assertions.assertEquals("ChangeArea", a.getName());
-        });
+        Optional<Area> changedArea = areaManager.update(changeArea);
+        //Then
+        Assertions.assertEquals("ChangeArea", changedArea.get().getName());
+
         verify(areaRepository, times(1)).save(changeArea);
+    }
+
+    @Test
+    public void updateNotFoundObjectTest() {
+        //Given
+        given(areaRepository.findById(2L)).willReturn(Optional.empty());
+        Area changeArea = new Area(2L, "ChangeArea", null);
+        given(areaRepository.save(changeArea)).willReturn(changeArea);
+        //When
+        Optional<Area> changedArea = areaManager.update(changeArea);
+        //Then
+        Assertions.assertFalse(changedArea.isPresent());
+
+        verify(areaRepository, never()).save(changeArea);
     }
 
     @Test
     public void deleteFindObjectTest() {
         //Given
         given(areaRepository.existsById(2L)).willReturn(true);
-        //Then
+        //When
         areaManager.delete(2L);
-        //
+        //Then
         verify(areaRepository, times(1)).deleteById(2L);
-        verify(areaRepository).deleteById(2L);
     }
 
     @Test
     public void deleteNotFindObjectTest() {
         //Given
         given(areaRepository.existsById(2L)).willReturn(false);
-        //Then
-        areaManager.delete(2L);
         //When
+        areaManager.delete(2L);
+        //Then
         verify(areaRepository, never()).deleteById(2L);
     }
 }

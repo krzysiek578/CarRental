@@ -1,4 +1,6 @@
-package com.app.portfolio.database.DatabaseAndSpringBoot;
+package com.app.portfolio.database.DatabaseAndSpringBoot.generic;
+
+import com.app.portfolio.database.DatabaseAndSpringBoot.Model;
 
 import java.util.List;
 import java.util.Optional;

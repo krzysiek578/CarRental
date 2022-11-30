@@ -4,6 +4,8 @@ package com.app.portfolio.database.DatabaseAndSpringBoot;
 import com.app.portfolio.database.DatabaseAndSpringBoot.area.Area;
 import com.app.portfolio.database.DatabaseAndSpringBoot.area.AreaRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +19,9 @@ public class DatabaseAndSpringBootApplicationController {
 
 
     private final AreaRepository areaRepository;
+    protected static final Logger logger = LogManager.getRootLogger();
+
+
 
 
     @GetMapping("/areas")
@@ -49,4 +54,14 @@ public class DatabaseAndSpringBootApplicationController {
     }
 
 
+    @GetMapping("/logger")
+    public String logger(){
+
+        logger.debug("Some debug info");
+
+        logger.getMessageFactory().newMessage("Some new message").getFormattedMessage();
+
+
+        return "Look to logs";
+    }
 }

@@ -1,16 +1,17 @@
-package com.app.portfolio.database.DatabaseAndSpringBoot;
+package com.app.portfolio.database.DatabaseAndSpringBoot.generic;
 
 
+import com.app.portfolio.database.DatabaseAndSpringBoot.Model;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 
-public class GenericManagerBase<T extends Model<ID>, ID> implements GenericManager<T, ID> {
+public class GenericManagerImpl<T extends Model<ID>, ID> implements GenericManager<T, ID> {
     private final JpaRepository<T, ID> repository;
 
-    public GenericManagerBase(final JpaRepository<T, ID> repository) {
+    public GenericManagerImpl(final JpaRepository<T, ID> repository) {
         this.repository = repository;
     }
 

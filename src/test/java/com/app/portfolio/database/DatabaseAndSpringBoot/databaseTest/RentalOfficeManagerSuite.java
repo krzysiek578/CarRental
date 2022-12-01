@@ -40,6 +40,10 @@ public class RentalOfficeManagerSuite {
         );
         //When
         List<RentalOffice> rentalOffices = rentalOfficeManager.findAll();
+        for (RentalOffice r: rentalOffices
+             ) {
+
+        }
         //Then
         Assertions.assertEquals(3, rentalOffices.size());
         Assertions.assertEquals("SecondOffice", rentalOffices.get(1).getName());

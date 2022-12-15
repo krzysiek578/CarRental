@@ -1,0 +1,146 @@
+swagger: '2.0'
+info:
+  description: This is example descripton of our documentation in Swagger.
+  version: 1.0.5
+  title: area
+paths:
+  /all-area/:
+    get:
+      summary: List all area
+      operationId: listArea
+      tags:
+        - area
+      responses:
+        '200':
+          description: A paged array of area
+          schema:
+            $ref: '#/definitions/areaListDTO'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+  /create-area/:
+    post:
+      summary: create area
+      operationId: createArea
+      tags:
+        - area
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: operation name
+          required: true
+          schema:
+            $ref: '#/definitions/areaDTO'
+      responses:
+        '200':
+          description: A paged array of area
+          schema:
+            $ref: '#/definitions/areaDTO'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+
+  /area/{id}/:
+    get:
+      summary: area
+      operationId: area
+      tags:
+        - area
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: A area from the database
+          schema:
+            $ref: '#/definitions/areaDTO'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+  /delete-area/{id}:
+    delete:
+      summary: delete area
+      operationId: deleteArea
+      tags:
+        - area
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: A area from the database
+          schema:
+            type: boolean
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+  /update-area/{id}:
+    put:
+      summary: area
+      operationId: updateArea
+      tags:
+        - area
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: operation body
+          required: true
+          schema:
+            $ref: '#/definitions/areaDTO'
+      responses:
+        '200':
+          description: A page of updated area
+          schema:
+            $ref: '#/definitions/areaDTO'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  areaListDTO:
+    type: array
+    items:
+      $ref: "#/definitions/areaDTO"
+  areaDTO:
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string

@@ -1,0 +1,146 @@
+swagger: '2.0'
+info:
+  description: This is example descripton of our documentation in Swagger.
+  version: 1.0.5
+  title: Department
+paths:
+  /all-department/:
+    get:
+      summary: List all department
+      operationId: listDepartment
+      tags:
+        - department
+      responses:
+        '200':
+          description: A paged array of department
+          schema:
+            $ref: '#/definitions/DepartmentListDTO'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+  /create-department/:
+    post:
+      summary: create department
+      operationId: createDepartment
+      tags:
+        - department
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: operation name
+          required: true
+          schema:
+            $ref: '#/definitions/DepartmentDTO'
+      responses:
+        '200':
+          description: A paged array of department
+          schema:
+            $ref: '#/definitions/DepartmentDTO'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+
+  /departmente/{id}/:
+    get:
+      summary: department
+      operationId: department
+      tags:
+        - department
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: A department from the database
+          schema:
+            $ref: '#/definitions/DepartmentDTO'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+  /delete-department/{id}:
+    delete:
+      summary: delete department
+      operationId: deleteDepartment
+      tags:
+        - department
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: A department from the database
+          schema:
+            type: boolean
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+  /update-department/{id}:
+    put:
+      summary: department
+      operationId: updateDepartment
+      tags:
+        - department
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: operation body
+          required: true
+          schema:
+            $ref: '#/definitions/DepartmentDTO'
+      responses:
+        '200':
+          description: A page of updated department
+          schema:
+            $ref: '#/definitions/DepartmentDTO'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  DepartmentListDTO:
+    type: array
+    items:
+      $ref: "#/definitions/DepartmentDTO"
+  DepartmentDTO:
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string

@@ -2,25 +2,29 @@ swagger: '2.0'
 info:
   description: This is example descripton of our documentation in Swagger.
   version: 1.0.5
-  title: Rental Office
+  title: Car
 paths:
-  /all-rental-office:
+  /all-car/:
     get:
-      summary: List all rental office
-      operationId: listRentalOffice
+      summary: List all car
+      operationId: listCar
+      tags:
+        - car
       responses:
         '200':
-          description: A paged array of rental office
+          description: A paged array of car
           schema:
-            $ref: '#/definitions/RentalOfficeListDto'
+            $ref: '#/definitions/carListDTO'
         '404':
           description: Not found
           schema:
             $ref: '#/definitions/Error'
-  /create-rental-office:
+  /create-car/:
     post:
-      summary: create rental office
-      operationId: createRentalOffice
+      summary: create car
+      operationId: createCar
+      tags:
+        - car
       consumes:
         - application/json
       produces:
@@ -31,21 +35,23 @@ paths:
           description: operation name
           required: true
           schema:
-            $ref: '#/definitions/RentalOfficeDto'
+            $ref: '#/definitions/carDTO'
       responses:
         '200':
-          description: A paged array of rental office
+          description: A paged array of car
           schema:
-            $ref: '#/definitions/RentalOfficeDto'
+            $ref: '#/definitions/carDTO'
         '404':
           description: Not found
           schema:
             $ref: '#/definitions/Error'
 
-  /rental-office/{id}:
+  /car/{id}/:
     get:
-      summary: rental office
-      operationId: rentalOffice
+      summary: car
+      operationId: car
+      tags:
+        - car
       consumes:
         - application/json
       produces:
@@ -58,17 +64,19 @@ paths:
           type: string
       responses:
         '200':
-          description: A rental office from the database
+          description: A car from the database
           schema:
-            $ref: '#/definitions/RentalOfficeDto'
+            $ref: '#/definitions/carDTO'
         '404':
           description: Not found
           schema:
             $ref: '#/definitions/Error'
-  /delete-rental-office/{id}:
+  /delete-car/{id}:
     delete:
-      summary: delete rental office
-      operationId: deleteRentalOffice
+      summary: delete car
+      operationId: deleteCar
+      tags:
+        - car
       parameters:
         - name: id
           in: path
@@ -77,17 +85,19 @@ paths:
           type: string
       responses:
         '200':
-          description: A rental office from the database
+          description: A car from the database
           schema:
             type: boolean
         '404':
           description: Not found
           schema:
             $ref: '#/definitions/Error'
-  /update-rental-office/{id}:
+  /update-car/{id}:
     put:
-      summary: update rental office
-      operationId: updateRentalOffice
+      summary: car
+      operationId: updateCar
+      tags:
+        - car
       parameters:
         - name: id
           in: path
@@ -99,39 +109,33 @@ paths:
           description: operation body
           required: true
           schema:
-            $ref: '#/definitions/RentalOfficeDto'
+            $ref: '#/definitions/carDTO'
       responses:
         '200':
-          description: A page of updated rental office
+          description: A page of updated car
           schema:
-            $ref: '#/definitions/RentalOfficeDto'
+            $ref: '#/definitions/carDTO'
         '404':
           description: Not found
           schema:
             $ref: '#/definitions/Error'
 definitions:
-  RentalOfficeListDto:
+  carListDTO:
     type: array
     items:
-      $ref: "#/definitions/RentalOfficeDto"
-  RentalOfficeDto:
+      $ref: "#/definitions/carDTO"
+  carDTO:
     required:
       - id
-      - name
-      - city
-      - street
-      - postalCode
+      - brand
+      - model
     properties:
       id:
         type: integer
         format: int64
-      name:
+      brand:
         type: string
-      city:
-        type: string
-      street:
-        type: string
-      postalCode:
+      model:
         type: string
   Error:
     required:
@@ -142,4 +146,4 @@ definitions:
         type: integer
         format: int32
       message:
-        type: string                 
+        type: string

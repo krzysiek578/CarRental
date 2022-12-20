@@ -129,6 +129,8 @@ definitions:
       - id
       - brand
       - model
+      - departments
+      - rentalOffice
     properties:
       id:
         type: integer
@@ -137,6 +139,13 @@ definitions:
         type: string
       model:
         type: string
+      departments:
+        type: array
+        uniqueItems: true
+        items:
+          $ref: 'departmentSwagger.yaml#/definitions/DepartmentDTO'
+      rentalOffice:
+        $ref: 'rentalOfficeSwagger.yaml#/definitions/RentalOfficeDto'
   Error:
     required:
       - code

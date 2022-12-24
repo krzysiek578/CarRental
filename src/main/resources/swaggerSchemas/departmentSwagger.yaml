@@ -128,12 +128,15 @@ definitions:
     required:
       - id
       - name
+      - rentalOffice
     properties:
       id:
         type: integer
         format: int64
       name:
         type: string
+      rentalOffice:
+        $ref: 'rentalOfficeSwagger.yaml#/definitions/RentalOfficeDto'
   Error:
     required:
       - code

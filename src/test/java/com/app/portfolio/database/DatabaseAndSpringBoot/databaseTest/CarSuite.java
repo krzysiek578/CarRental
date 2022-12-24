@@ -40,6 +40,7 @@ public class CarSuite {
         departmentRepository.deleteAll();
         carRepository.deleteAll();
     }
+
     @BeforeEach
     public void clearDatabaseBefore() {
         departmentRepository.deleteAll();
@@ -218,7 +219,7 @@ public class CarSuite {
         final Car car = new Car("Mercedes", "C63", PetrolType.ELECTRIC, false);
         carRepository.save(car);
         final Car carBeforeAddDepartments = carRepository.findById(1L).get();
-        Assertions.assertEquals("Mercedes",carBeforeAddDepartments.getBrand());
+        Assertions.assertEquals("Mercedes", carBeforeAddDepartments.getBrand());
 
         Department department = new Department("Test");
         Department secondDepartment = new Department("TestSecond");
@@ -234,8 +235,6 @@ public class CarSuite {
         Assertions.assertEquals(2, departmentListFromDatabase.size());
 
         final List<Car> carList = carRepository.findAll();
-
-
 
 
         car.getDepartments().remove(department);

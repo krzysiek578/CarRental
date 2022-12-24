@@ -4,10 +4,10 @@ import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.model.CarDT
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring",collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
-public interface CarMapper{
+@Mapper(componentModel = "spring", collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
+public interface CarMapper {
 
-        Car mapToCar (CarDTO carDTO);
+    Car mapToCar(CarDTO carDTO);
 
-        CarDTO mapToCarDTO (Car car);
+    CarDTO mapToCarDTO(Car car);
 }

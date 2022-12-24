@@ -128,12 +128,15 @@ definitions:
     required:
       - id
       - name
+      - departments
     properties:
       id:
         type: integer
         format: int64
       name:
         type: string
+      departments:
+        $ref: 'departmentSwagger.yaml#/definitions/DepartmentListDTO'
   Error:
     required:
       - code

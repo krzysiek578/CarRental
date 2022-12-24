@@ -14,7 +14,7 @@ paths:
         '200':
           description: A paged array of car
           schema:
-            $ref: '#/definitions/carListDTO'
+            $ref: '#/definitions/CarListDTO'
         '404':
           description: Not found
           schema:
@@ -35,12 +35,12 @@ paths:
           description: operation name
           required: true
           schema:
-            $ref: '#/definitions/carDTO'
+            $ref: '#/definitions/CarDTO'
       responses:
         '200':
           description: A paged array of car
           schema:
-            $ref: '#/definitions/carDTO'
+            $ref: '#/definitions/CarDTO'
         '404':
           description: Not found
           schema:
@@ -66,7 +66,7 @@ paths:
         '200':
           description: A car from the database
           schema:
-            $ref: '#/definitions/carDTO'
+            $ref: '#/definitions/CarDTO'
         '404':
           description: Not found
           schema:
@@ -109,26 +109,29 @@ paths:
           description: operation body
           required: true
           schema:
-            $ref: '#/definitions/carDTO'
+            $ref: '#/definitions/CarDTO'
       responses:
         '200':
           description: A page of updated car
           schema:
-            $ref: '#/definitions/carDTO'
+            $ref: '#/definitions/CarDTO'
         '404':
           description: Not found
           schema:
             $ref: '#/definitions/Error'
 definitions:
-  carListDTO:
+  CarListDTO:
     type: array
     items:
-      $ref: "#/definitions/carDTO"
-  carDTO:
+      $ref: "#/definitions/CarDTO"
+  CarDTO:
     required:
       - id
       - brand
       - model
+      - departments
+      - rentalOffice
+      - petrolType
     properties:
       id:
         type: integer
@@ -137,6 +140,15 @@ definitions:
         type: string
       model:
         type: string
+      departments:
+        $ref: 'departmentSwagger.yaml#/definitions/DepartmentListDTO'
+      rentalOffice:
+        $ref: 'rentalOfficeSwagger.yaml#/definitions/RentalOfficeDto'
+      petrolType:
+        enum:
+          [DIESEL,
+           GASOLINE,
+           ELECTRIC]
   Error:
     required:
       - code

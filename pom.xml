@@ -15,6 +15,8 @@
     <description>Spring boot and database</description>
     <properties>
         <java.version>17</java.version>
+        <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
+        <lombok.version>1.18.24</lombok.version>
     </properties>
     <dependencies>
         <dependency>
@@ -42,6 +44,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope> <!-- poczytaj o scope w pom -->
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -66,7 +70,16 @@
             <artifactId>swagger-codegen-maven-plugin</artifactId>
             <version>2.4.29</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.5.2.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.5.2.Final</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -94,7 +107,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>src/main/resources/swaggerSchemas/departmentSwagger.yaml</inputSpec>
-<!--                            <inputSpec>src/main/resources/swaggerSchemas/rentalOfficeSwagger.yaml</inputSpec>-->
+                            <!--                            <inputSpec>src/main/resources/swaggerSchemas/rentalOfficeSwagger.yaml</inputSpec>-->
                             <language>spring</language>
 
                             <generateApiTests>false</generateApiTests>
@@ -195,6 +208,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 

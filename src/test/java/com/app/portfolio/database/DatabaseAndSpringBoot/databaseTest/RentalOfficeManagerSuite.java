@@ -115,8 +115,6 @@ public class RentalOfficeManagerSuite {
     }
 
 
-
-
     @Test
     public void updateNotFoundObjectTest() {
         //Given

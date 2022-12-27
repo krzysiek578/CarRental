@@ -81,7 +81,7 @@ public class DepartmentSuite {
 
         //When
         final Set<Car> carListFromDepartmentBeforeAdd = departmentRepository.findById(1L).get().getCars(); //isPresent nie jest konieczne, zależy co sprawdzasz
-        Assertions.assertEquals(0 , carListFromDepartmentBeforeAdd.size());
+        Assertions.assertEquals(0, carListFromDepartmentBeforeAdd.size());
         Set<Car> cars = new HashSet<>();
         cars.add(car);
         department.setCars(cars);
@@ -123,7 +123,7 @@ public class DepartmentSuite {
         final Area areaInDepartmentAfterAddArea = departmentRepository.findById(1L).get().getArea();
         //Then
         Assertions.assertNotNull(areaInDepartmentAfterAddArea);
-        Assertions.assertEquals("TestArea" ,areaInDepartmentAfterAddArea.getName());
+        Assertions.assertEquals("TestArea", areaInDepartmentAfterAddArea.getName());
     }
 
     @Test
@@ -153,7 +153,7 @@ public class DepartmentSuite {
         secondDepartment.addArea(area);
         final Area areaInDepartmentAfterAddArea = departmentRepository.findById(1L).get().getArea();
         Assertions.assertNotNull(areaInDepartmentAfterAddArea);
-        Assertions.assertEquals("TestArea" ,areaInDepartmentAfterAddArea.getName());
+        Assertions.assertEquals("TestArea", areaInDepartmentAfterAddArea.getName());
         department.removeArea();
         //Then
         Assertions.assertNull(department.getArea());
@@ -188,7 +188,7 @@ public class DepartmentSuite {
         secondDepartment.setArea(area);
         final Area areaInFirstDepartmentAfterAddArea = departmentRepository.findById(1L).get().getArea();
         Assertions.assertNotNull(areaInFirstDepartmentAfterAddArea);
-        Assertions.assertEquals("TestArea" ,areaInFirstDepartmentAfterAddArea.getName());
+        Assertions.assertEquals("TestArea", areaInFirstDepartmentAfterAddArea.getName());
         department.setArea(null);
         secondDepartment.setArea(null);
         //Then
@@ -198,7 +198,6 @@ public class DepartmentSuite {
     }
 
 }
-
 
 
 //Przy manyToMany na set bo nie chcemy uplikatow

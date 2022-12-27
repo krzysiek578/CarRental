@@ -78,7 +78,7 @@ public class CarManagerSuite {
     @Test
     public void saveTestWithID() {
         //Given
-        Car car = new Car(2L ,"BMW", "E92", PetrolType.GASOLINE, true, null, null);
+        Car car = new Car(2L, "BMW", "E92", PetrolType.GASOLINE, true, null, null);
         given(carRepository.save(car)).willReturn(car);
         //When
         Car carSaved = carManager.save(car);
@@ -92,9 +92,9 @@ public class CarManagerSuite {
     @Test
     public void updateTest() {
         //Given
-        Car car = new Car(2L ,"BMW", "E92", PetrolType.GASOLINE, true, null, null);
+        Car car = new Car(2L, "BMW", "E92", PetrolType.GASOLINE, true, null, null);
         given(carRepository.findById(2L)).willReturn(Optional.of(car));
-        Car changeCar = new Car(2L ,"BMW", "E92 M3", PetrolType.GASOLINE, true, null, null);
+        Car changeCar = new Car(2L, "BMW", "E92 M3", PetrolType.GASOLINE, true, null, null);
         given(carRepository.save(changeCar)).willReturn(changeCar);
         //When
         Optional<Car> changedCar = carManager.update(changeCar);
@@ -108,7 +108,7 @@ public class CarManagerSuite {
     public void updateNotFoundObjetTest() {
         //Given
         given(carRepository.findById(2L)).willReturn(Optional.empty());
-        Car changeCar = new Car(2L ,"BMW", "E92 M3", PetrolType.GASOLINE, true, null, null);
+        Car changeCar = new Car(2L, "BMW", "E92 M3", PetrolType.GASOLINE, true, null, null);
         given(carRepository.save(changeCar)).willReturn(changeCar);
         //When
         Optional<Car> changedCar = carManager.update(changeCar);

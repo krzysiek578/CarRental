@@ -40,8 +40,8 @@ public class Department implements Model<Long> {
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "department_cars",
-            joinColumns = { @JoinColumn(name = "fk_department") },
-            inverseJoinColumns = { @JoinColumn(name = "fk_cars") })
+            joinColumns = {@JoinColumn(name = "fk_department")},
+            inverseJoinColumns = {@JoinColumn(name = "fk_cars")})
     //Właściciel relacji jointable
     //joincolumn do jednokierunkowej relacji chyba ze masz wymaganie nazwania klucza obcego
     //a mappedby do dwukierunkowych
@@ -71,7 +71,7 @@ public class Department implements Model<Long> {
         area.getDepartments().add(this);
     }
 
-    public void removeArea(){
+    public void removeArea() {
         this.area.getDepartments().remove(this);
         this.setArea(null);
     }

@@ -1,7 +1,6 @@
 package com.app.portfolio.database.DatabaseAndSpringBoot.area;
 
 
-
 import com.app.portfolio.database.DatabaseAndSpringBoot.Model;
 import com.app.portfolio.database.DatabaseAndSpringBoot.department.Department;
 import lombok.AllArgsConstructor;
@@ -13,12 +12,11 @@ import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.GenerationType;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Entity

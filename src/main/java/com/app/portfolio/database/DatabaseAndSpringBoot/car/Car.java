@@ -50,8 +50,6 @@ public class Car implements Model<Long> {
     private RentalOffice rentalOffice;
 
 
-
-
     public Car(String brand, String model, PetrolType petrolType, boolean enabled) {
         super();
         this.brand = brand;

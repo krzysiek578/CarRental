@@ -12,6 +12,4 @@ public interface DepartmentMapper {
     DepartmentDTO mapToDepartmentsDTO(Department department);
 
 
-
-
 }

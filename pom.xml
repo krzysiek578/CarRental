@@ -63,7 +63,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.13</version>
+            <version>1.6.14</version>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
@@ -73,12 +73,14 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.5.2.Final</version>
+            <version>1.5.3.Final</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct-processor</artifactId>
-            <version>1.5.2.Final</version>
+            <version>1.5.3.Final</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -88,14 +90,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!--			<plugin>-->
-            <!--				<groupId>org.apache.maven.plugins</groupId>-->
-            <!--				<artifactId>maven-surefire-plugin</artifactId>-->
-            <!--				<version>2.22.2</version>-->
-            <!--				<configuration>-->
-            <!--					<skipTests>true</skipTests>-->
-            <!--				</configuration>-->
-            <!--			</plugin>-->
             <plugin>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
@@ -107,7 +101,6 @@
                         </goals>
                         <configuration>
                             <inputSpec>src/main/resources/swaggerSchemas/departmentSwagger.yaml</inputSpec>
-                            <!--                            <inputSpec>src/main/resources/swaggerSchemas/rentalOfficeSwagger.yaml</inputSpec>-->
                             <language>spring</language>
 
                             <generateApiTests>false</generateApiTests>

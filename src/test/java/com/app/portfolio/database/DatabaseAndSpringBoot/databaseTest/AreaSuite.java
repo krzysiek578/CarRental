@@ -62,7 +62,7 @@ public class AreaSuite {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void testCustomSaveAreaWithId() {
         //Given
-        final Area area = new Area(2L,"FirstArea",null);
+        final Area area = new Area(2L, "FirstArea", null);
         //When
         final List<Area> areasBeforeAdd = areaRepository.findAll();
         Assertions.assertEquals(0, areasBeforeAdd.size());

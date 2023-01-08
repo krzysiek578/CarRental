@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class AreaController extends AreaApiController {
@@ -32,25 +30,20 @@ public class AreaController extends AreaApiController {
 
     @Override
     @GetMapping(value = "/areas/{id}")
-    public ResponseEntity<AreaDTO> area(@PathVariable("id") String id) {
-        Optional<Area> areaDAO = areaManager.findById(Long.valueOf(id));
-        return new ResponseEntity<>(
-                areaDAO.map(areaMapper::maptoAreaDTO).orElse(null),
-                HttpStatus.OK
-        );
+    public ResponseEntity<AreaDTO> area(@PathVariable("id") final String id) {
+        return ResponseEntity.of(areaManager.findById(Long.valueOf(id)).map(areaMapper::maptoAreaDTO));
     }
 
     @Override
     @PostMapping(value = "/areas/add")
-    public ResponseEntity<AreaDTO> createArea(@RequestBody AreaDTO body) {
-        Area areaFromRequest = areaMapper.mapToArea(body);
+    public ResponseEntity<AreaDTO> createArea(@RequestBody final AreaDTO body) {
         return new ResponseEntity<>(
-                areaMapper.maptoAreaDTO(areaManager.save(areaFromRequest)), HttpStatus.OK
+                areaMapper.maptoAreaDTO(areaManager.save(areaMapper.mapToArea(body))), HttpStatus.OK
         );
     }
     @Override
     @DeleteMapping(value = "/areas/remove/{id}")
-    public ResponseEntity<Boolean> deleteArea(@PathVariable("id") String id) {
+    public ResponseEntity<Boolean> deleteArea(@PathVariable("id") final String id) {
         if (id == null) return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         areaManager.delete(Long.valueOf(id));
         return new ResponseEntity<>(true, HttpStatus.OK);
@@ -58,9 +51,8 @@ public class AreaController extends AreaApiController {
     @Override
     @GetMapping(value = "/areas")
     public ResponseEntity<AreaListDTO> listArea() {
-        List<Area> areaDAOS = areaManager.findAll();
         AreaListDTO areaDTOS = new AreaListDTO();
-        for (Area areaDAO : areaDAOS) {
+        for (Area areaDAO : areaManager.findAll()) {
             areaDTOS.add(areaMapper.maptoAreaDTO(areaDAO));
         }
         return new ResponseEntity<>(areaDTOS, HttpStatus.OK);
@@ -68,8 +60,20 @@ public class AreaController extends AreaApiController {
 
     @Override
     @PatchMapping("/areas/update/{id}")
-    public ResponseEntity<AreaDTO> updateArea(@PathVariable("id") String id, @RequestBody AreaDTO body) {
-        return super.updateArea(id, body);
+    public ResponseEntity<AreaDTO> updateArea(@PathVariable("id") final String id, @RequestBody final AreaDTO body) {
+        Area areaFromRequest = areaMapper.mapToArea(body);
+        return new ResponseEntity<>(
+                areaMapper.maptoAreaDTO(
+                        areaManager.findById(Long.valueOf(id))
+                                .map(areaManager::save)
+                                .orElse(
+                                        areaManager.update(areaFromRequest)
+                                        .orElse(null)
+                                )
+                ), HttpStatus.OK
+        );
+
+
     }
 
 

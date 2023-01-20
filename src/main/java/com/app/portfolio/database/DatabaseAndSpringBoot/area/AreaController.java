@@ -22,7 +22,7 @@ public class AreaController extends AreaApiController {
     final private AreaManager areaManager;
     final private AreaMapperImpl areaMapper;
 
-    public AreaController(ObjectMapper objectMapper, HttpServletRequest request, AreaManager areaManager, AreaMapperImpl areaMapper) {
+    public AreaController(final ObjectMapper objectMapper, final HttpServletRequest request, final AreaManager areaManager, final AreaMapperImpl areaMapper) {
         super(objectMapper, request);
         this.areaManager = areaManager;
         this.areaMapper = areaMapper;

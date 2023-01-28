@@ -4,7 +4,6 @@ import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.api.Rentall
 import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.model.RentalOfficeDto;
 import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.model.RentalOfficeListDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,11 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.apache.logging.log4j.util.Strings.isNotBlank;
+
 @RestController
 public class RentalOfficeController extends RentallOfficeApiController {
 
-    final private RentalOfficeManager rentalOfficeManager;
-    final private RentalOfficeMapperImpl rentalOfficeMapper;
+    private final RentalOfficeManager rentalOfficeManager;
+    private final RentalOfficeMapperImpl rentalOfficeMapper;
 
     public RentalOfficeController(final ObjectMapper objectMapper, final HttpServletRequest request, final RentalOfficeManager rentalOfficeManager, final RentalOfficeMapperImpl rentalOfficeMapper) {
         super(objectMapper, request);
@@ -32,31 +33,31 @@ public class RentalOfficeController extends RentallOfficeApiController {
 
     @Override
     public ResponseEntity<RentalOfficeDto> createRentalOffice(@RequestBody final RentalOfficeDto body) {
-        return new ResponseEntity<>(
-                rentalOfficeMapper.mapToRentalOfficeDTO(rentalOfficeManager.save(rentalOfficeMapper.mapToRentalOffice(body))), HttpStatus.OK
+        return ResponseEntity.ok(
+                rentalOfficeMapper.mapToRentalOfficeDTO(rentalOfficeManager.save(rentalOfficeMapper.mapToRentalOffice(body)))
         );
     }
 
     @Override
     public ResponseEntity<Boolean> deleteRentalOffice(@PathVariable("id") final String id) {
-        if (id == null) return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        if (!isNotBlank(id)) return ResponseEntity.notFound().build();
         rentalOfficeManager.delete(Long.valueOf(id));
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return ResponseEntity.ok(true);
     }
 
     @Override
     public ResponseEntity<RentalOfficeListDto> listRentalOffice() {
-        RentalOfficeListDto rentalOfficeDTOS = new RentalOfficeListDto();
+        final RentalOfficeListDto rentalOfficeDTOS = new RentalOfficeListDto();
         for (RentalOffice rentalOfficeDAO : rentalOfficeManager.findAll()) {
             rentalOfficeDTOS.add(rentalOfficeMapper.mapToRentalOfficeDTO(rentalOfficeDAO));
         }
-        return new ResponseEntity<>(rentalOfficeDTOS, HttpStatus.OK);
+        return ResponseEntity.ok(rentalOfficeDTOS);
     }
 
     @Override
     public ResponseEntity<RentalOfficeDto> updateRentalOffice(@PathVariable("id") final String id, @RequestBody final RentalOfficeDto body) {
-        RentalOffice rentalOfficeFromRequest = rentalOfficeMapper.mapToRentalOffice(body);
-        return new ResponseEntity<>(
+        final RentalOffice rentalOfficeFromRequest = rentalOfficeMapper.mapToRentalOffice(body);
+        return ResponseEntity.ok(
                 rentalOfficeMapper.mapToRentalOfficeDTO(
                         rentalOfficeManager.findById(Long.valueOf(id))
                                 .map(rentalOfficeManager::save)
@@ -64,7 +65,7 @@ public class RentalOfficeController extends RentallOfficeApiController {
                                         rentalOfficeManager.update(rentalOfficeFromRequest)
                                                 .orElse(null)
                                 )
-                ), HttpStatus.OK
+                )
         );
 
 

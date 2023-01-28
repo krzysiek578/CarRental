@@ -4,7 +4,6 @@ import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.api.CarApiC
 import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.model.CarDTO;
 import com.app.portfolio.database.DatabaseAndSpringBoot.rentalOffice.model.CarListDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,11 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.apache.logging.log4j.util.Strings.isNotBlank;
+
 @RestController
 public class CarController  extends CarApiController {
 
-    final private CarManager carManager;
-    final private CarMapperImpl carMapper;
+    private final CarManager carManager;
+    private final CarMapperImpl carMapper;
 
     public CarController(final ObjectMapper objectMapper, final HttpServletRequest request, final CarManager carManager, final CarMapperImpl carMapper) {
         super(objectMapper, request);
@@ -32,29 +33,28 @@ public class CarController  extends CarApiController {
 
     @Override
     public ResponseEntity<CarDTO> createCar(@RequestBody final CarDTO body) {
-        return new ResponseEntity<>(
-                carMapper.mapToCarDTO(carManager.save(carMapper.mapToCar(body))), HttpStatus.OK
+        return ResponseEntity.ok(
+                carMapper.mapToCarDTO(carManager.save(carMapper.mapToCar(body)))
         );
     }
     @Override
     public ResponseEntity<Boolean> deleteCar(@PathVariable("id") final String id) {
-        if (id == null) return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        if (!isNotBlank(id)) return ResponseEntity.notFound().build();
         carManager.delete(Long.valueOf(id));
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return ResponseEntity.ok(true);
     }
     @Override
     public ResponseEntity<CarListDTO> listCar() {
-        CarListDTO CarDTOS = new CarListDTO();
-        for (Car CarDAO : carManager.findAll()) {
-            CarDTOS.add(carMapper.mapToCarDTO(CarDAO));
-        }
-        return new ResponseEntity<>(CarDTOS, HttpStatus.OK);
+        //wiem że nie powinno tworzyć się teog obiektu ale nia mam pomysłu jak to inaczej zrobić, obstawiam że można jakoś collectorem ale nie wiem jak go do końca wykorzystywać
+        final CarListDTO carDTOS = new CarListDTO();
+        carDTOS.addAll(carManager.findAll().stream().map(carMapper::mapToCarDTO).toList());
+        return ResponseEntity.ok(carDTOS);
     }
 
     @Override
     public ResponseEntity<CarDTO> updateCar(@PathVariable("id") final String id, @RequestBody final CarDTO body) {
-        Car CarFromRequest = carMapper.mapToCar(body);
-        return new ResponseEntity<>(
+        final Car CarFromRequest = carMapper.mapToCar(body);
+        return ResponseEntity.ok(
                 carMapper.mapToCarDTO(
                         carManager.findById(Long.valueOf(id))
                                 .map(carManager::save)
@@ -62,7 +62,7 @@ public class CarController  extends CarApiController {
                                         carManager.update(CarFromRequest)
                                                 .orElse(null)
                                 )
-                ), HttpStatus.OK
+                )
         );
 
 

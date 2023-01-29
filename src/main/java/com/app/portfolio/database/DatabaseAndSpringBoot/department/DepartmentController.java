@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import static org.apache.logging.log4j.util.Strings.isNotBlank;
 
 @RestController
-public class DepartmentController  extends DepartmentApiController {
+public class DepartmentController extends DepartmentApiController {
 
     private final DepartmentManager departmentManager;
     private final DepartmentMapperImpl departmentMapper;
@@ -27,7 +27,7 @@ public class DepartmentController  extends DepartmentApiController {
 
 
     @Override
-    public ResponseEntity<DepartmentDTO> department (@PathVariable("id") final String id) {
+    public ResponseEntity<DepartmentDTO> department(@PathVariable("id") final String id) {
         return ResponseEntity.of(departmentManager.findById(Long.valueOf(id)).map(departmentMapper::mapToDepartmentsDTO));
     }
 
@@ -37,33 +37,25 @@ public class DepartmentController  extends DepartmentApiController {
                 departmentMapper.mapToDepartmentsDTO(departmentManager.save(departmentMapper.mapToDepartment(body)))
         );
     }
+
     @Override
     public ResponseEntity<Boolean> deleteDepartment(@PathVariable("id") final String id) {
         if (!isNotBlank(id)) return ResponseEntity.notFound().build();
         departmentManager.delete(Long.valueOf(id));
         return ResponseEntity.ok(true);
     }
+
     @Override
     public ResponseEntity<DepartmentListDTO> listDepartment() {
-        final DepartmentListDTO DepartmentDTOS = new DepartmentListDTO();
-        for (Department departmentDAO : departmentManager.findAll()) {
-            DepartmentDTOS.add(departmentMapper.mapToDepartmentsDTO(departmentDAO));
-        }
-        return ResponseEntity.ok(DepartmentDTOS);
+        final DepartmentListDTO departmentDTOS = new DepartmentListDTO();
+        departmentDTOS.addAll(departmentManager.findAll().stream().map(departmentMapper::mapToDepartmentsDTO).toList());
+        return ResponseEntity.ok(departmentDTOS);
     }
 
     @Override
     public ResponseEntity<DepartmentDTO> updateDepartment(@PathVariable("id") final String id, @RequestBody final DepartmentDTO body) {
-        final Department DepartmentFromRequest = departmentMapper.mapToDepartment(body);
         return ResponseEntity.ok(
-                departmentMapper.mapToDepartmentsDTO(
-                        departmentManager.findById(Long.valueOf(id))
-                                .map(departmentManager::save)
-                                .orElse(
-                                        departmentManager.update(DepartmentFromRequest)
-                                                .orElse(null)
-                                )
-                )
+                departmentMapper.mapToDepartmentsDTO(departmentManager.save(departmentMapper.mapToDepartment(body)))
         );
 
 

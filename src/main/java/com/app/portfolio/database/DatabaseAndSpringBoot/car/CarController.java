@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import static org.apache.logging.log4j.util.Strings.isNotBlank;
 
 @RestController
-public class CarController  extends CarApiController {
+public class CarController extends CarApiController {
 
     private final CarManager carManager;
     private final CarMapperImpl carMapper;
@@ -24,7 +24,7 @@ public class CarController  extends CarApiController {
         this.carManager = carManager;
         this.carMapper = carMapper;
     }
-    
+
 
     @Override
     public ResponseEntity<CarDTO> car(@PathVariable("id") final String id) {
@@ -37,12 +37,14 @@ public class CarController  extends CarApiController {
                 carMapper.mapToCarDTO(carManager.save(carMapper.mapToCar(body)))
         );
     }
+
     @Override
     public ResponseEntity<Boolean> deleteCar(@PathVariable("id") final String id) {
         if (!isNotBlank(id)) return ResponseEntity.notFound().build();
         carManager.delete(Long.valueOf(id));
         return ResponseEntity.ok(true);
     }
+
     @Override
     public ResponseEntity<CarListDTO> listCar() {
         //wiem że nie powinno tworzyć się teog obiektu ale nia mam pomysłu jak to inaczej zrobić, obstawiam że można jakoś collectorem ale nie wiem jak go do końca wykorzystywać
@@ -53,19 +55,7 @@ public class CarController  extends CarApiController {
 
     @Override
     public ResponseEntity<CarDTO> updateCar(@PathVariable("id") final String id, @RequestBody final CarDTO body) {
-        final Car CarFromRequest = carMapper.mapToCar(body);
-        return ResponseEntity.ok(
-                carMapper.mapToCarDTO(
-                        carManager.findById(Long.valueOf(id))
-                                .map(carManager::save)
-                                .orElse(
-                                        carManager.update(CarFromRequest)
-                                                .orElse(null)
-                                )
-                )
-        );
-
-
+        return ResponseEntity.ok(carMapper.mapToCarDTO(carManager.save(carMapper.mapToCar(body))));
     }
 
 

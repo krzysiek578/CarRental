@@ -36,25 +36,25 @@ public class AreaController extends AreaApiController {
                 areaMapper.maptoAreaDTO(areaManager.save(areaMapper.mapToArea(body)))
         );
     }
+
     @Override
     public ResponseEntity<Boolean> deleteArea(@PathVariable("id") final String id) {
         if (!isNotBlank(id)) return ResponseEntity.notFound().build();
         areaManager.delete(Long.valueOf(id));
         return ResponseEntity.ok(true);
     }
+
     @Override
     public ResponseEntity<AreaListDTO> listArea() {
         final AreaListDTO areaDTOS = new AreaListDTO();
-          areaDTOS.addAll(areaManager.findAll().stream().map(areaMapper::maptoAreaDTO).toList());
+        areaDTOS.addAll(areaManager.findAll().stream().map(areaMapper::maptoAreaDTO).toList());
         return ResponseEntity.ok(areaDTOS);
     }
 
     @Override
     public ResponseEntity<AreaDTO> updateArea(@PathVariable("id") final String id, @RequestBody final AreaDTO body) {
-        final Area areaFromRequest = areaMapper.mapToArea(body);
-        areaFromRequest.setId(Long.valueOf(id));
         return ResponseEntity.ok(
-                areaMapper.maptoAreaDTO(areaManager.save(areaFromRequest))
+                areaMapper.maptoAreaDTO(areaManager.save(areaMapper.mapToArea(body)))
         );
     }
 

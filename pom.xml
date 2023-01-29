@@ -82,6 +82,11 @@
             <version>1.5.3.Final</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>9.8.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -201,7 +206,24 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>9.8.1</version>
+                <configuration>
+                    <user>myUser</user>
+                    <password>mySecretPwd</password>
+                    <schemas>
+                        <schema>schema1</schema>
+                        <schema>schema2</schema>
+                        <schema>schema3</schema>
+                    </schemas>
+                    <placeholders>
+                        <keyABC>valueXYZ</keyABC>
+                        <otherplaceholder>value123</otherplaceholder>
+                    </placeholders>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

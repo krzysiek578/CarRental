@@ -48,27 +48,15 @@ public class RentalOfficeController extends RentallOfficeApiController {
     @Override
     public ResponseEntity<RentalOfficeListDto> listRentalOffice() {
         final RentalOfficeListDto rentalOfficeDTOS = new RentalOfficeListDto();
-        for (RentalOffice rentalOfficeDAO : rentalOfficeManager.findAll()) {
-            rentalOfficeDTOS.add(rentalOfficeMapper.mapToRentalOfficeDTO(rentalOfficeDAO));
-        }
+        rentalOfficeDTOS.addAll(rentalOfficeManager.findAll().stream().map(rentalOfficeMapper::mapToRentalOfficeDTO).toList());
         return ResponseEntity.ok(rentalOfficeDTOS);
     }
 
     @Override
     public ResponseEntity<RentalOfficeDto> updateRentalOffice(@PathVariable("id") final String id, @RequestBody final RentalOfficeDto body) {
-        final RentalOffice rentalOfficeFromRequest = rentalOfficeMapper.mapToRentalOffice(body);
         return ResponseEntity.ok(
-                rentalOfficeMapper.mapToRentalOfficeDTO(
-                        rentalOfficeManager.findById(Long.valueOf(id))
-                                .map(rentalOfficeManager::save)
-                                .orElse(
-                                        rentalOfficeManager.update(rentalOfficeFromRequest)
-                                                .orElse(null)
-                                )
-                )
+                rentalOfficeMapper.mapToRentalOfficeDTO(rentalOfficeManager.save(rentalOfficeMapper.mapToRentalOffice(body)))
         );
-
-
     }
 
 
